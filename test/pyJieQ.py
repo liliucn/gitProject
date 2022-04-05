@@ -18,6 +18,5 @@ if __name__ == '__main__':
         save_name = iPath + '截取' + i
         print(save_name)
         subprocess.call('ffmpeg//bin//ffmpeg.exe -y -i ' +  file_name + ' -ss ' + start_time + ' -t '+ lasts_time + ' -acodec copy -vcodec copy -async 1 ' + save_name)
-
-
+        break;
 print('完成')
