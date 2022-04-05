@@ -177,66 +177,66 @@ print(sT)
 #endregion
 
 #region 4、选择排序
-# def selection_sort(arr):
-#     """选择排序"""
-#     # 第一层for表示循环选择的遍数
-#     for i in range(len(arr) - 1):
-#         # 将起始元素设为最小元素
-#         min_index = i
-#         # 第二层for表示最小元素和后面的元素逐个比较
-#         for j in range(i + 1, len(arr)):
-#             if arr[j] < arr[min_index]:
-#                 # 如果当前元素比最小元素小，则把当前元素角标记为最小元素角标
-#                 min_index = j
-#         # 查找一遍后将最小元素与起始元素互换
-#         arr[min_index], arr[i] = arr[i], arr[min_index]
-#     return arr
-# selection_sort([89, 29, 39 , 19, 97, 88, 77, 11, 11, 22,33, 63, 44, 22])
+def selection_sort(arr):
+    """选择排序"""
+    # 第一层for表示循环选择的遍数
+    for i in range(len(arr) - 1):
+        # 将起始元素设为最小元素
+        min_index = i
+        # 第二层for表示最小元素和后面的元素逐个比较
+        for j in range(i + 1, len(arr)):
+            if arr[j] < arr[min_index]:
+                # 如果当前元素比最小元素小，则把当前元素角标记为最小元素角标
+                min_index = j
+        # 查找一遍后将最小元素与起始元素互换
+        arr[min_index], arr[i] = arr[i], arr[min_index]
+    return arr
+selection_sort([89, 29, 39 , 19, 97, 88, 77, 11, 11, 22,33, 63, 44, 22])
 
 
 #endregion
 
 #region 5、选择排序输出菱形
-# total = 6
-# row = 1
-# while row <= 6:
-#     col = 1     # 保证每次内循环col都从1开始，打印前面空格的个数
-#     while col <= (6-row):  # 这个内层while就是单纯打印空格
-#         print(' ', end='')  # 空格的打印不换行
-#         col += 1
-#     print(row * '* ')  # 每一行打印完空格后，接着在同一行打印星星，星星个数与行数相等，且打印完星星后print默认换行
-#     row += 1
-#
-# bottom = 6
-# while bottom > 0:
-#     col = 1     # 保证每次内循环col都从1开始，打印前面空格的个数
-#     while bottom+col <= 6:
-#         print(' ', end='')  # 空格的打印不换行
-#         col += 1
-#     print(bottom * '* ')  # 每一行打印完空格后，接着在同一行打印星星，星星个数与行数相等，且打印完星星后print默认换行
-#     bottom -= 1
+total = 6
+row = 1
+while row <= 6:
+    col = 1     # 保证每次内循环col都从1开始，打印前面空格的个数
+    while col <= (6-row):  # 这个内层while就是单纯打印空格
+        print(' ', end='')  # 空格的打印不换行
+        col += 1
+    print(row * '* ')  # 每一行打印完空格后，接着在同一行打印星星，星星个数与行数相等，且打印完星星后print默认换行
+    row += 1
+
+bottom = 6
+while bottom > 0:
+    col = 1     # 保证每次内循环col都从1开始，打印前面空格的个数
+    while bottom+col <= 6:
+        print(' ', end='')  # 空格的打印不换行
+        col += 1
+    print(bottom * '* ')  # 每一行打印完空格后，接着在同一行打印星星，星星个数与行数相等，且打印完星星后print默认换行
+    bottom -= 1
 
 #endregion
 
 #region 6、选择排序输出菱形每3步踢除一个人
-# a=list(range(1,18))
-# for i in a:
-#     c = len(a) % 3
-#     b = []
-#     if c == 0: #输入的数字能整除3
-#         for i in range(1, len(a) + 1):
-#             if i % 3 != 0:
-#                 b.append(a[i - 1])
-#         a = b
-#     else:#不能整除3的
-#         for i in range(1, len(a) + 1):
-#             if i % 3 != 0:
-#                 b.append(a[i - 1])
-#         a = b[-c:] + b[:-c]
-#     print(a)
-#     if len(a)==2:
-#         break;
-# print("最后一个人序号为：{}".format(a[1]))
+a=list(range(1,18))
+for i in a:
+    c = len(a) % 3
+    b = []
+    if c == 0: #输入的数字能整除3
+        for i in range(1, len(a) + 1):
+            if i % 3 != 0:
+                b.append(a[i - 1])
+        a = b
+    else:#不能整除3的
+        for i in range(1, len(a) + 1):
+            if i % 3 != 0:
+                b.append(a[i - 1])
+        a = b[-c:] + b[:-c]
+    print(a)
+    if len(a)==2:
+        break;
+print("最后一个人序号为：{}".format(a[1]))
 #endregion
 
 # region 7、循环
@@ -798,10 +798,14 @@ print(ValidateDay(dayTemp))
 import urllib.request
 urlTemp="http://bang.dangdang.com/books/bestsellers/01.00.00.00.00.00-24hours-0-0-1-1"
 returnTemp = urllib.request.urlopen(urlTemp)
+
+# 爬下来的文章入库后，再读库，解析出来的是乱码
+# 查看博客园上的文章：https://www.cnblogs.com/liuq/p/9849960.html
+# str(row[2]).replace('\u3000','').encode('latin-1').decode('gbk') #解决编码
 print(returnTemp.read().decode("gbk"))
 # endregion
 
-#region request请求
+#region 21、request请求
 import  requests
 temp=requests.get("https://www.jd.com");
 print(temp.content) # 返回字节流
