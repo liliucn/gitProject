@@ -9,7 +9,6 @@ the_array = np.array([49, 7, 44, 27, 13, 35, 71])
 
 an_array = np.where(the_array > 30, 0, the_array)
 print(an_array)
-
 # 将大于 30 小于 50 的所有元素替换为 0
 the_array = np.array([49, 7, 44, 27, 13, 35, 71])
 an_array = np.where((the_array > 30) & (the_array < 50), 0, the_array)
