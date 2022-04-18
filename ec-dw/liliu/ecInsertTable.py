@@ -96,24 +96,6 @@ def jieXiData(tablename,dataTemp):
             daTe.sort(key=lambda x: x[0], reverse=True)  # 降序排列
             keyLengthMax = daTe.keys()
             print(daTe)
-        elif tablename=='channelSource' : #获取来源信息
-            dicListData = dicContent['data']
-            tablename='EC_dim_channelSource'
-        elif tablename=='customStages' : #获取客户进展信息
-            dicListData = dicContent['data']
-            tablename='EC_dim_customStages'
-        elif tablename=='pubicPond' : #获取业务组信息
-            dicListData = dicContent['data']
-            tablename='EC_dim_pubicPond'
-        elif tablename=='productGroup' : #获取产品分组
-            dicListData = dicContent['data']
-            tablename='EC_dim_productGroup'
-        elif tablename=='ec_apipush' : #查询主动推送接口
-            dicListData = dicContent['data']
-            tablename='ec_apipush'
-        elif tablename=='role' : #获取角色信息
-            dicListData = dicContent['data']
-            tablename='EC_dim_role'
         createAndInsertTable(dicListData, tablename)
     except (OSError, TypeError) as reason:
         shop_logging('jieXiData:报错'+str(reason))
