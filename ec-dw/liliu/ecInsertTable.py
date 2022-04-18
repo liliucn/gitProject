@@ -202,15 +202,7 @@ if __name__ == '__main__':
                                                                                                                                             "exeType":0,#执行与否（0 待执行 1 已结束 ）
                                                                                                                                             "optUserId":17640187 #操作人
                                                                                                                                         }}
-             # ,'来源信息':{'tableName':'channelSource','requestStyle':'get','interfaceUrl':'https://open.workec.com/v2/customer/getChannelSource','params':''}
-             # ,'客户进展信息':{'tableName':'customStages','requestStyle':'get','interfaceUrl':'https://open.workec.com/v2/config/getStages','params':''}
-             # ,'公海池信息':{'tableName':'pubicPond','requestStyle':'get','interfaceUrl':'https://open.workec.com/v2/config/getPubicPond','params':''}
-             # ,'获取产品分组':{'tableName':'productGroup','requestStyle':'get','interfaceUrl':'https://open.workec.com/v2/sales/getProductGroupList','params':''}
-             # ,'查询主动推送接口':{'tableName':'ec_apipush','requestStyle':'post','interfaceUrl':'https://open.workec.com/v2/apipush/getApiPush','params':{"beginTime": "2022-03-04 00:00:00","endTime": "2022-03-24 17:11:11","onlyError": True,"pageSize": 1000}}
-             # ,'获取角色':{'tableName':'role','requestStyle':'post','interfaceUrl':'https://open.workec.com/v2/role/list','params':{"userId" : 111}}
-             # ,'企业的自定义字段信息':{'tableName':'EC_dim_customerAutoInfo','requestStyle':'get','interfaceUrl':'https://open.workec.com/v2/config/getFieldMapping','params':''}
-             # ,'企业联系人的自定义字段':{'tableName':'EC_dim_customerContactAutoInfo','requestStyle':'get','interfaceUrl':'https://open.workec.com/v2/config/getBookFieldMapping','params':''}
-             }
+            }
     for dicT in dicTemp:
         # for childT in dicTemp[dicT]:
         if dicT!='':
