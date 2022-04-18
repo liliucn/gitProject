@@ -45,10 +45,10 @@ def shop_logging(name):
     logger.setLevel(logging.DEBUG)
     logger.info(name)
 
-def createTableDB(tableName,createSql):
+def createTableDB(tableNameTemp,tableName,createSql):
     try:
         # region 创建表
-        createSql = ' if exists (select * from dbo.sysobjects where id = object_id(\''+tableName+'\') and OBJECTPROPERTY(id, \'IsUserTable\') = 1)  DROP TABLE '+tableName+';  create table '+tableName+' ('+createSql+');'
+        createSql = ' if exists (select * from dbo.sysobjects where id = object_id(\''+tableName+'\') and OBJECTPROPERTY(id, \'IsUserTable\') = 1)  DROP TABLE '+tableName+';  create table '+tableName+' ('+createSql+'); -- '+tableNameTemp
 
         # executeSql(createSql)
         print(createSql)
@@ -56,14 +56,14 @@ def createTableDB(tableName,createSql):
     except (OSError,TypeError) as reason:
         shop_logging('建表报错，错误的原因是:',str(reason))
 
-def birthCreateSql(sqlTemp,tablenameT):
+def birthCreateSql(tableName_T,sqlTemp,tablenameT):
     #一键生成建表语句
     # createSql='autoID,followUserId,groupId,name,call,gender,birthday,isLunarBirthday,title,qq,mobile,phone,fax,email,company,companyUrl,companyAddress,memo,vocation,channel,prefecture,fieldInfos,crmId,modifyTime,contactTime,createTime,lastFollowUserId,step,createUserId,wechat,wechats,emails,mobiles,storageTime,publicPondId,apiAdd,crmType,shareUserId,lastContactTime,stars,khhyflyj,khhyflej,sheng,shi,qx,dwxz,cp,remark1,remark2,remark3,remark4,remark5,remark6'
     tempL=sqlTemp.split(',')
     # print(len(tempL))
     createSql = ' nvarchar(2000),'.join(tempL) + ' nvarchar(2000)'
     createSql=createSql.replace('autoID nvarchar(2000),','autoID int identity(1,1) not null PRIMARY key ,')
-    createTableDB(tablenameT, createSql)
+    createTableDB(tableName_T,tablenameT, createSql)
 
 def main():
 
@@ -89,7 +89,8 @@ def main():
     #执行createSql方法
     for dicT in dicTemp:
         if dicT != '':
+            tableName_T=dicT
             tableName = dicTemp[dicT]['tableName']
             fieldStr = dicTemp[dicT]['fieldStr']
-            birthCreateSql(fieldStr,tableName)
+            birthCreateSql(tableName_T,fieldStr,tableName)
 main()
