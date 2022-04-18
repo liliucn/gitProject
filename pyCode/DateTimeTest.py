@@ -27,6 +27,7 @@ print(strftime("%y", gmtime()))
 ### Convert seconds into GMT date
 print(strftime("%a, %d %b %Y %H:%M:%S +0000", gmtime(1234567890)))
 
+#测试
 ### 2将天、小时、分钟转换为秒
 SECONDS_PER_MINUTE = 60
 SECONDS_PER_HOUR = 3600
