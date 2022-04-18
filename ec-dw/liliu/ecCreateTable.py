@@ -50,7 +50,7 @@ def createTableDB(tableNameTemp,tableName,createSql):
         # region 创建表
         createSql = ' if exists (select * from dbo.sysobjects where id = object_id(\''+tableName+'\') and OBJECTPROPERTY(id, \'IsUserTable\') = 1)  DROP TABLE '+tableName+';  create table '+tableName+' ('+createSql+'); -- '+tableNameTemp
 
-        # executeSql(createSql)
+        executeSql(createSql)
         print(createSql)
         # endregion
     except (OSError,TypeError) as reason:
@@ -67,7 +67,7 @@ def birthCreateSql(tableName_T,sqlTemp,tablenameT):
 
 def main():
 
-    dicTemp={'客户列表':{'tableName':'ec_dim_customer_temp','fieldStr':'autoID,followUserId,groupId,name,call,gender,birthday,isLunarBirthday,title,qq,mobile,phone,fax,email,company,companyUrl,companyAddress,memo,vocation,channel,prefecture,fieldInfos,crmId,modifyTime,contactTime,createTime,lastFollowUserId,step,createUserId,wechat,wechats,emails,mobiles,storageTime,publicPondId,apiAdd,crmType,shareUserId,lastContactTime,stars,khhyflyj,khhyflej,sheng,shi,qx,dwxz,cp,remark1,remark2,remark3,remark4,remark5,remark6'}
+    dicTemp={'客户列表':{'tableName':'ec_dim_customer_temp','fieldStr':'autoID,followUserId,groupId,name,call,gender,birthday,isLunarBirthday,title,qq,mobile,phone,fax,email,company,companyUrl,companyAddress,memo,vocation,channel,prefecture,crmId,modifyTime,contactTime,createTime,lastFollowUserId,step,createUserId,wechat,wechats,emails,mobiles,storageTime,publicPondId,apiAdd,crmType,shareUserId,lastContactTime,stars,khhyflyj,khhyflej,sheng,shi,qx,dwxz,cp,remark1,remark2,remark3,remark4,remark5,remark6'}
          ,'枚举表-级联字段':{'tableName':'ec_dim_enum_temp','fieldStr':'autoID,fieldId,paramId,parentParamId,paramName,sort,remark1,remark2,remark3,remark4,remark5,remark6'}
          ,'客户联系人信息':{'tableName':'ec_dim_customerContact_temp','fieldStr':'autoID,id,crmId,corpid,createUserId,name,callName,title,mobile,mobileCode,phone,phoneCode,phoneExtension,qq,email,wechat,birthday,lunarBirthday,lunarLeap,memo,gender,createTime,updateTime,bumen,zhiwu,lxrcj,remark1,remark2,remark3,remark4,remark5,remark6'}
          ,'组织架构-部门':{'tableName':'ec_dim_department_temp','fieldStr':'autoID,deptId,dept,parentDeptId,remark1,remark2,remark3,remark4,remark5,remark6'}
@@ -83,8 +83,10 @@ def main():
          ,'查询客户轨迹':{'tableName':'ec_dim_cusTrajectory_temp','fieldStr':'autoID,content,createTime,crmId,receiveUserIds,trajectoryId,trajectoryType,userId,remark1,remark2,remark3,remark4,remark5,remark6'}
          ,'删除客户':{'tableName':'ec_dim_customer_del_temp','fieldStr':'autoID,crmId,delTime,id,remark1,remark2,remark3,remark4,remark5,remark6'}
 # ,'销售计划':{'tableName':'ec_dim_salePlan'} #待定
-         ,'查询任务':{'tableName':'ec_dim_taskList','fieldStr':'autoID,taskId,ruleId,title,noticeTime,endTime,createName,createUserId,exeName,exeId,exeNum,taskNum,detail,ruleType,taskType,remark1,remark2,remark3,remark4,remark5,remark6'}
-         ,'规则|任务类型':{'tableName':'ec_dim_kindType','fieldStr':'autoID,typeID,typeName,kindType,remark1,remark2,remark3,remark4,remark5,remark6'}
+         ,'查询任务':{'tableName':'ec_dim_taskList_temp','fieldStr':'autoID,taskId,ruleId,title,noticeTime,endTime,createName,createUserId,exeName,exeId,exeNum,taskNum,detail,ruleType,taskType,remark1,remark2,remark3,remark4,remark5,remark6'}
+         ,'规则|任务类型':{'tableName':'ec_dim_kindType_temp','fieldStr':'autoID,typeID,typeName,kindType,remark1,remark2,remark3,remark4,remark5,remark6'}
+         ,'企业的自定义字段信息':{'tableName':'EC_dim_customerAutoInfo_temp','fieldStr':'autoID,fieldGroupId,fieldGroupName,fieldGroupSort,fieldId,fieldName,category,remark1,remark2,remark3,remark4,remark5,remark6'}
+         ,'企业联系人的自定义字段':{'tableName':'EC_dim_customerContactAutoInfo_temp','fieldStr':'autoID,typeID,typeName,kindType,remark1,remark2,remark3,remark4,remark5,remark6'}
          }
     #执行createSql方法
     for dicT in dicTemp:

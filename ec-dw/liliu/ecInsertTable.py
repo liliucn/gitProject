@@ -60,13 +60,14 @@ def executeMany(insertSql,data):
 def writeDBChildTable(tableName,fieldList,data,fieldLength):
     try:
         # region删除表记录
-        delSql="delete from "+ tableName
-        executeSql(delSql)
+        # delSql="delete from "+ tableName
+        # executeSql(delSql)
         # endregion
 
         # region 新增记录
         tempFormat=str('%s,'*fieldLength)[:-1]
         insertSql = "insert into  "+tableName+"  ("+fieldList+") values ("+tempFormat+")"
+        print(insertSql)
         executeMany(insertSql,data)
         # endregion
     except (OSError,TypeError) as reason:
@@ -81,21 +82,21 @@ def jieXiData(tablename,dataTemp):
         # print(dicContent)
         if 'list' in dicContent['data']: #获取所有的客户
             dicListData=dicContent['data']['list']
-        elif 'fieldParams' in dicContent['data']: #获取级联的字段
-            dicListData=dicContent['data']['fieldParams']
-        elif tablename=='depts' : #获取组织机构的部门
-            dicListData = dicContent['data'][tablename]
-            tablename='EC_dim_depts'
-        elif tablename=='users' : #获取组织机构的人员
-            dicListData = dicContent['data'][tablename]
-            tablename='EC_dim_users'
-        elif 'fieldParam' in dicContent['data'][0]:# 获取 企业的自定义字段信息 【没完，需要自定义组装数据集】
-            dicListData=dict(dicContent['data'][0])
-            print(dicListData['fieldParam'])
-            daTe = [[len(t), t] for t in dicListData]
-            daTe.sort(key=lambda x: x[0], reverse=True)  # 降序排列
-            keyLengthMax = daTe.keys()
-            print(daTe)
+        # elif 'fieldParams' in dicContent['data']: #获取级联的字段
+        #     dicListData=dicContent['data']['fieldParams']
+        # elif tablename=='depts' : #获取组织机构的部门
+        #     dicListData = dicContent['data'][tablename]
+        #     tablename='EC_dim_depts'
+        # elif tablename=='users' : #获取组织机构的人员
+        #     dicListData = dicContent['data'][tablename]
+        #     tablename='EC_dim_users'
+        # elif 'fieldParam' in dicContent['data'][0]:# 获取 企业的自定义字段信息 【没完，需要自定义组装数据集】
+        #     dicListData=dict(dicContent['data'][0])
+        #     print(dicListData['fieldParam'])
+        #     daTe = [[len(t), t] for t in dicListData]
+        #     daTe.sort(key=lambda x: x[0], reverse=True)  # 降序排列
+        #     keyLengthMax = daTe.keys()
+        #     print(daTe)
         createAndInsertTable(dicListData, tablename)
     except (OSError, TypeError) as reason:
         shop_logging('jieXiData:报错'+str(reason))
@@ -109,11 +110,11 @@ def createAndInsertTable(dicListData, tablename):
         daTe.sort(key=lambda x: x[0], reverse=True)  # 降序排列
         keyLengthMax = daTe[0][1].keys()
         # dicListDataList=dict(dicContent['data']['list'][0])
-        # region 拼接insert into 和 create table 语句的前边字段部分
+
+        # region 拼接insert into 语句的前边字段部分
         # fieldTemp=['custom_'+str(i) for i in list(dicListDataList.keys())]
         fieldTemp = [str(i) for i in list(keyLengthMax)]  # 取出所有的key，当作字段
         fieldList = ','.join(fieldTemp)  # 组装-字段列表 拼接insert语句的sql
-        createSql = ' nvarchar(2000),'.join(fieldTemp) + ' nvarchar(2000)'  # 拼接create table语句的sql
         # endregion
         listTReturn = []
         m = 0
@@ -151,40 +152,44 @@ if __name__ == '__main__':
     app_secret = 'vGUltdoYbnaE2iwi4Xf'
     sign = get_sign(app_id, app_secret, str(timestamp))
 
-    heads = {'Content-type': 'application/json',
+    heads = {
+             'Content-type': 'application/json',
              'X-Ec-Cid': '15912663',
              'X-Ec-Sign': sign,
              'X-Ec-TimeStamp': str(timestamp)
              }
 
     #第二步：拼接header，请求头信息  https://open.workec.com/newdoc/doc/zKMGwg1NN
-    dicTemp={'客户列表':{'tableName':'ec_dim_customer','requestStyle':'post','interfaceUrl':'https://open.workec.com/v2/customer/queryList','params':{"pageNo": "1","pageSize": "200"}}
-            , '客户枚举相关字段':{'tableName':'ec_dim_enum','requestStyle':'post','interfaceUrl':'https://open.workec.com/v2/customer/getCasCadeFieldMapping','params':{"fieldIds": [81655955,81654764,81656622,81619239,81656624,81656625,81649962]}}  #,"lastId":2282208
-            , '客户联系人信息': {'tableName': 'ec_dim_customerContact', 'requestStyle': 'post','interfaceUrl': 'https://open.workec.com/v2/contactbook/list','params': {"crmId": 5625884449,"optUserId": 17640187}}
-            , '组织架构-部门':{'tableName':'depts','requestStyle':'get','interfaceUrl':'https://open.workec.com/v2/org/struct/info','params':''}
-            , '组织架构-人员':{'tableName':'users','requestStyle':'get','interfaceUrl':'https://open.workec.com/v2/org/struct/info','params':''}
-            , '客户资料-文件列表查询':{'tableName':'ec_dim_fileList','requestStyle':'get','interfaceUrl':'https://open.workec.com/v2/customer/file/list','params':{"crmIds":"5624387252,5624487824","folderId": 1}}
-            , '客户资料-文件目录查询':{'tableName':'ec_dim_fileFolderList','requestStyle':'get','interfaceUrl':'https://open.workec.com/v2/customer/folder/list','params':{"crmIds":"5624387252,5624487824"}}
-            , '客户标签管理-分组':{'tableName':'ec_dim_cusLabelBaseInfosGroup','requestStyle':'get','interfaceUrl':'https://open.workec.com/v2/label/getLabelInfo','params':''}
-            , '客户标签列表':{'tableName':'ec_dim_cusLabelList','requestStyle':'get','interfaceUrl':'https://open.workec.com/v2/customer/queryLabel','params':{"crmIds":"5624387252,5624487824"}}
-            , '客户进展列表':{'tableName':'ec_dim_cusStageBaseInfos','requestStyle':'get','interfaceUrl':'https://open.workec.com/v2/config/getStages','params':''}
-            , '客户头像列表':{'tableName':'ec_dim_cusImagesList','requestStyle':'get','interfaceUrl':'https://open.workec.com/v2/customer/face','params':''}
-            , '查询客户轨迹':{'tableName':'ec_dim_cusTrajectory','requestStyle':'get','interfaceUrl':'https://open.workec.com/v2/customer/getTrajectory','params':{
-                                                                                                                                                                "date":{
-                                                                                                                                                                    "endTime":"2022-03-25 17:00:00",
-                                                                                                                                                                    "startTime":"2022-02-28 00:00:00"
-                                                                                                                                                                }}}
-            , '删除客户': {'tableName': 'ec_dim_customer_del', 'requestStyle': 'get','interfaceUrl': 'https://open.workec.com/v2/customer/delcrms', 'params': {
-                                                                                                                                                                "startTime": "2022-03-18 00:00:00",
-                                                                                                                                                                "endTime": "2022-03-24 00:00:00",
-                                                                                                                                                                "lastId": ""
-                                                                                                                                                            }}
-            , '查询任务 ':{'tableName':'ec_dim_taskList','requestStyle':'get','interfaceUrl':'https://open.workec.com/v2/task/query','params':{
-                                                                                                                                            "userType":1,#1 我的任务 2 团队任务
-                                                                                                                                            "exeType":0,#执行与否（0 待执行 1 已结束 ）
-                                                                                                                                            "optUserId":17640187 #操作人
-                                                                                                                                        }}
-            }
+    dicTemp={#'客户列表':{'tableName':'ec_dim_customer_temp','requestStyle':'post','interfaceUrl':'https://open.workec.com/v2/customer/queryList','params':{"pageNo": "1","pageSize": "200"}}
+             '客户枚举相关字段':{'tableName':'ec_dim_enum_temp','requestStyle':'post','interfaceUrl':'https://open.workec.com/v2/customer/getCasCadeFieldMapping','params':{"fieldIds": [81655955,81654764,81656622,81619239,81656624,81656625,81649962]}}  #,"lastId":2282208
+            # , '客户联系人信息': {'tableName': 'ec_dim_customerContact_temp', 'requestStyle': 'post','interfaceUrl': 'https://open.workec.com/v2/contactbook/list','params': {"crmId": 5625884449,"optUserId": 17640187}}
+            # , '组织架构-部门':{'tableName':'depts','requestStyle':'get','interfaceUrl':'https://open.workec.com/v2/org/struct/info','params':''}
+            # , '组织架构-人员':{'tableName':'users','requestStyle':'get','interfaceUrl':'https://open.workec.com/v2/org/struct/info','params':''}
+            # , '客户资料-文件列表查询':{'tableName':'ec_dim_fileList_temp','requestStyle':'get','interfaceUrl':'https://open.workec.com/v2/customer/file/list','params':{"crmIds":"5624387252,5624487824","folderId": 1}}
+            # , '客户资料-文件目录查询':{'tableName':'ec_dim_fileFolderList_temp','requestStyle':'get','interfaceUrl':'https://open.workec.com/v2/customer/folder/list','params':{"crmIds":"5624387252,5624487824"}}
+            # , '客户标签管理-分组':{'tableName':'ec_dim_cusLabelBaseInfosGroup_temp','requestStyle':'get','interfaceUrl':'https://open.workec.com/v2/label/getLabelInfo','params':''}
+            # , '客户标签列表':{'tableName':'ec_dim_cusLabelList_temp','requestStyle':'get','interfaceUrl':'https://open.workec.com/v2/customer/queryLabel','params':{"crmIds":"5624387252,5624487824"}}
+            # , '客户进展列表':{'tableName':'ec_dim_cusStageBaseInfos_temp','requestStyle':'get','interfaceUrl':'https://open.workec.com/v2/config/getStages','params':''}
+            # , '客户头像列表':{'tableName':'ec_dim_cusImagesList_temp','requestStyle':'get','interfaceUrl':'https://open.workec.com/v2/customer/face','params':''}
+            # , '查询客户轨迹':{'tableName':'ec_dim_cusTrajectory_temp','requestStyle':'get','interfaceUrl':'https://open.workec.com/v2/customer/getTrajectory','params':{
+            #                                                                                                                                                     "date":{
+            #                                                                                                                                                         "endTime":"2022-03-25 17:00:00",
+            #                                                                                                                                                         "startTime":"2022-02-28 00:00:00"
+            #                                                                                                                                                     }}}
+            # , '删除客户': {'tableName': 'ec_dim_customer_del_temp', 'requestStyle': 'get','interfaceUrl': 'https://open.workec.com/v2/customer/delcrms', 'params': {
+            #                                                                                                                                                     "startTime": "2022-03-18 00:00:00",
+            #                                                                                                                                                     "endTime": "2022-03-24 00:00:00",
+            #                                                                                                                                                     "lastId": ""
+            #                                                                                                                                                 }}
+            # , '查询任务 ':{'tableName':'ec_dim_taskList_temp','requestStyle':'get','interfaceUrl':'https://open.workec.com/v2/task/query','params':{
+            #                                                                                                                                 "userType":1,#1 我的任务 2 团队任务
+            #                                                                                                                                 "exeType":0,#执行与否（0 待执行 1 已结束 ）
+            #                                                                                                                                 "optUserId":17640187 #操作人
+            #                                                                                                                             }}
+            # ,'企业的自定义字段信息':{'tableName':'EC_dim_customerAutoInfo_temp','requestStyle':'get','interfaceUrl':'https://open.workec.com/v2/config/getFieldMapping','params':''}
+            # ,'企业联系人的自定义字段':{'tableName':'EC_dim_customerContactAutoInfo_temp','requestStyle':'get','interfaceUrl':'https://open.workec.com/v2/config/getBookFieldMapping','params':''}
+
+    }
     for dicT in dicTemp:
         # for childT in dicTemp[dicT]:
         if dicT!='':
