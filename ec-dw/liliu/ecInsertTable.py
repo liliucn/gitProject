@@ -1,19 +1,16 @@
-import requests
-import json
-import pymssql
 import hashlib
+import json
+import logging
 import time
-import graphviz
+import warnings
+
+import pandas as pd
+import pymssql
 # region https://www.cnblogs.com/PPWEI/p/11805247.html
 # import warnings
 # warnings.filterwarnings("ignore")
 import requests
-import os
-import time
-import pandas as pd
-import json
-import warnings
-import logging
+
 warnings.filterwarnings("ignore")
 requests.adapters.DEFAULT_RETRIES = 20
 # logging.FileHandler(filename='LOG/'+__name__+'.log',encoding="utf-8",mode="a")
@@ -180,18 +177,40 @@ if __name__ == '__main__':
 
     #第二步：拼接header，请求头信息  https://open.workec.com/newdoc/doc/zKMGwg1NN
     dicTemp={'客户列表':{'tableName':'ec_dim_customer','requestStyle':'post','interfaceUrl':'https://open.workec.com/v2/customer/queryList','params':{"pageNo": "1","pageSize": "200"}}
-            # ,'字典表-级联字段':{'tableName':'ec_dim_JiLian','requestStyle':'post','interfaceUrl':'https://open.workec.com/v2/customer/getCasCadeFieldMapping','params':{"fieldIds": [81655955,81654764,81656622,81619239,81656624,81656625,81649962]}} #,"lastId":2282208
-             ,'组织架构-部门':{'tableName':'depts','requestStyle':'get','interfaceUrl':'https://open.workec.com/v2/org/struct/info','params':''}
-             ,'组织架构-人员':{'tableName':'users','requestStyle':'get','interfaceUrl':'https://open.workec.com/v2/org/struct/info','params':''}
-            # ,'来源信息':{'tableName':'channelSource','requestStyle':'get','interfaceUrl':'https://open.workec.com/v2/customer/getChannelSource','params':''}
-            # ,'客户进展信息':{'tableName':'customStages','requestStyle':'get','interfaceUrl':'https://open.workec.com/v2/config/getStages','params':''}
-            # ,'公海池信息':{'tableName':'pubicPond','requestStyle':'get','interfaceUrl':'https://open.workec.com/v2/config/getPubicPond','params':''}
-            # ,'获取产品分组':{'tableName':'productGroup','requestStyle':'get','interfaceUrl':'https://open.workec.com/v2/sales/getProductGroupList','params':''}
-            # ,'查询主动推送接口':{'tableName':'ec_apipush','requestStyle':'post','interfaceUrl':'https://open.workec.com/v2/apipush/getApiPush','params':{"beginTime": "2022-03-04 00:00:00","endTime": "2022-03-24 17:11:11","onlyError": True,"pageSize": 1000}}
-            # ,'获取角色':{'tableName':'role','requestStyle':'post','interfaceUrl':'https://open.workec.com/v2/role/list','params':{"userId" : 111}}
-            # ,'企业的自定义字段信息':{'tableName':'EC_dim_customerAutoInfo','requestStyle':'get','interfaceUrl':'https://open.workec.com/v2/config/getFieldMapping','params':''}
-            # ,'企业联系人的自定义字段':{'tableName':'EC_dim_customerContactAutoInfo','requestStyle':'get','interfaceUrl':'https://open.workec.com/v2/config/getBookFieldMapping','params':''}
-           }
+            , '客户枚举相关字段':{'tableName':'ec_dim_enum','requestStyle':'post','interfaceUrl':'https://open.workec.com/v2/customer/getCasCadeFieldMapping','params':{"fieldIds": [81655955,81654764,81656622,81619239,81656624,81656625,81649962]}}  #,"lastId":2282208
+            , '客户联系人信息': {'tableName': 'ec_dim_customerContact', 'requestStyle': 'post','interfaceUrl': 'https://open.workec.com/v2/contactbook/list','params': {"crmId": 5625884449,"optUserId": 17640187}}
+            , '组织架构-部门':{'tableName':'depts','requestStyle':'get','interfaceUrl':'https://open.workec.com/v2/org/struct/info','params':''}
+            , '组织架构-人员':{'tableName':'users','requestStyle':'get','interfaceUrl':'https://open.workec.com/v2/org/struct/info','params':''}
+            , '客户资料-文件列表查询':{'tableName':'ec_dim_fileList','requestStyle':'get','interfaceUrl':'https://open.workec.com/v2/customer/file/list','params':{"crmIds":"5624387252,5624487824","folderId": 1}}
+            , '客户资料-文件目录查询':{'tableName':'ec_dim_fileFolderList','requestStyle':'get','interfaceUrl':'https://open.workec.com/v2/customer/folder/list','params':{"crmIds":"5624387252,5624487824"}}
+            , '客户标签管理-分组':{'tableName':'ec_dim_cusLabelBaseInfosGroup','requestStyle':'get','interfaceUrl':'https://open.workec.com/v2/label/getLabelInfo','params':''}
+            , '客户标签列表':{'tableName':'ec_dim_cusLabelList','requestStyle':'get','interfaceUrl':'https://open.workec.com/v2/customer/queryLabel','params':{"crmIds":"5624387252,5624487824"}}
+            , '客户进展列表':{'tableName':'ec_dim_cusStageBaseInfos','requestStyle':'get','interfaceUrl':'https://open.workec.com/v2/config/getStages','params':''}
+            , '客户头像列表':{'tableName':'ec_dim_cusImagesList','requestStyle':'get','interfaceUrl':'https://open.workec.com/v2/customer/face','params':''}
+            , '查询客户轨迹':{'tableName':'ec_dim_cusTrajectory','requestStyle':'get','interfaceUrl':'https://open.workec.com/v2/customer/getTrajectory','params':{
+                                                                                                                                                                "date":{
+                                                                                                                                                                    "endTime":"2022-03-25 17:00:00",
+                                                                                                                                                                    "startTime":"2022-02-28 00:00:00"
+                                                                                                                                                                }}}
+            , '删除客户': {'tableName': 'ec_dim_customer_del', 'requestStyle': 'get','interfaceUrl': 'https://open.workec.com/v2/customer/delcrms', 'params': {
+                                                                                                                                                                "startTime": "2022-03-18 00:00:00",
+                                                                                                                                                                "endTime": "2022-03-24 00:00:00",
+                                                                                                                                                                "lastId": ""
+                                                                                                                                                            }}
+            , '查询任务 ':{'tableName':'ec_dim_taskList','requestStyle':'get','interfaceUrl':'https://open.workec.com/v2/task/query','params':{
+                                                                                                                                            "userType":1,#1 我的任务 2 团队任务
+                                                                                                                                            "exeType":0,#执行与否（0 待执行 1 已结束 ）
+                                                                                                                                            "optUserId":17640187 #操作人
+                                                                                                                                        }}
+             # ,'来源信息':{'tableName':'channelSource','requestStyle':'get','interfaceUrl':'https://open.workec.com/v2/customer/getChannelSource','params':''}
+             # ,'客户进展信息':{'tableName':'customStages','requestStyle':'get','interfaceUrl':'https://open.workec.com/v2/config/getStages','params':''}
+             # ,'公海池信息':{'tableName':'pubicPond','requestStyle':'get','interfaceUrl':'https://open.workec.com/v2/config/getPubicPond','params':''}
+             # ,'获取产品分组':{'tableName':'productGroup','requestStyle':'get','interfaceUrl':'https://open.workec.com/v2/sales/getProductGroupList','params':''}
+             # ,'查询主动推送接口':{'tableName':'ec_apipush','requestStyle':'post','interfaceUrl':'https://open.workec.com/v2/apipush/getApiPush','params':{"beginTime": "2022-03-04 00:00:00","endTime": "2022-03-24 17:11:11","onlyError": True,"pageSize": 1000}}
+             # ,'获取角色':{'tableName':'role','requestStyle':'post','interfaceUrl':'https://open.workec.com/v2/role/list','params':{"userId" : 111}}
+             # ,'企业的自定义字段信息':{'tableName':'EC_dim_customerAutoInfo','requestStyle':'get','interfaceUrl':'https://open.workec.com/v2/config/getFieldMapping','params':''}
+             # ,'企业联系人的自定义字段':{'tableName':'EC_dim_customerContactAutoInfo','requestStyle':'get','interfaceUrl':'https://open.workec.com/v2/config/getBookFieldMapping','params':''}
+             }
     for dicT in dicTemp:
         # for childT in dicTemp[dicT]:
         if dicT!='':
@@ -213,8 +232,7 @@ if __name__ == '__main__':
     #客户--客户行业分类：81655955
     #客户--省市县：81654764
     #客户--单位性质：81656622
-    #客户--产品：81619239
-    #客户联系人--部门：81656624
+    #客户--产品：81619239#客户联系人--部门：81656624
     #客户联系人--职务：81656625
     #客户联系人--联系人层级：81649962
 #endregion
