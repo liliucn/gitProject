@@ -82,16 +82,15 @@ def main():
          ,'客户轨迹':{'tableName':'ec_dim_cusTrajectoryBaseInfos_temp','fieldStr':'autoID,levelOneID,levelOneName,TrajectoryID,TrajectoryName,remark1,remark2,remark3,remark4,remark5,remark6'}
          ,'查询客户轨迹':{'tableName':'ec_dim_cusTrajectory_temp','fieldStr':'autoID,content,createTime,crmId,receiveUserIds,trajectoryId,trajectoryType,userId,remark1,remark2,remark3,remark4,remark5,remark6'}
          ,'删除客户':{'tableName':'ec_dim_customer_del_temp','fieldStr':'autoID,crmId,delTime,id,remark1,remark2,remark3,remark4,remark5,remark6'}
-# ,'销售计划':{'tableName':'ec_dim_salePlan'} #待定
          ,'查询任务':{'tableName':'ec_dim_taskList_temp','fieldStr':'autoID,taskId,ruleId,title,noticeTime,endTime,createName,createUserId,exeName,exeId,exeNum,taskNum,detail,ruleType,taskType,remark1,remark2,remark3,remark4,remark5,remark6'}
          ,'规则|任务类型':{'tableName':'ec_dim_kindType_temp','fieldStr':'autoID,typeID,typeName,kindType,remark1,remark2,remark3,remark4,remark5,remark6'}
-         ,'企业的自定义字段信息':{'tableName':'EC_dim_customerAutoInfo_temp','fieldStr':'autoID,fieldGroupId,fieldGroupName,fieldGroupSort,fieldId,fieldName,category,remark1,remark2,remark3,remark4,remark5,remark6'}
-         ,'企业联系人的自定义字段':{'tableName':'EC_dim_customerContactAutoInfo_temp','fieldStr':'autoID,typeID,typeName,kindType,remark1,remark2,remark3,remark4,remark5,remark6'}
+         ,'企业的自定义字段信息':{'tableName':'EC_dim_customerAutoInfo_temp','fieldStr':'autoID,fieldGroupId,fieldGroupName,fieldGroupSort,fieldId,fieldName,fieldSort,fieldType,category,remark1,remark2,remark3,remark4,remark5,remark6'}
+         ,'企业联系人的自定义字段':{'tableName':'EC_dim_customerContactAutoInfo_temp','fieldStr':'autoID,id,text,type,isMust,regex,level,remark1,remark2,remark3,remark4,remark5,remark6'}
          }
     #执行createSql方法
     for dicT in dicTemp:
         if dicT != '':
-            tableName_T=dicT
+            tableName_T = dicT
             tableName = dicTemp[dicT]['tableName']
             fieldStr = dicTemp[dicT]['fieldStr']
             birthCreateSql(tableName_T,fieldStr,tableName)
