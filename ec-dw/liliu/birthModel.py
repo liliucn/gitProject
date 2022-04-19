@@ -19,10 +19,18 @@ from sklearn.model_selection import cross_val_score #交叉验证
 
 #决策树-分类树
 def DecisionTreeClassifier1():
-    # 加载数据集
+    # 1、加载数据集
     wine=load_wine()
     df=pd.concat([pd.DataFrame(wine.data),pd.DataFrame(wine.target)],axis=1)
     print(df.head())
+
+    # 2、划分数据集
+    X_train, X_test, y_train, y_test=train_test_split(wine.data,wine.target,test_size=0.3)
+
+    # 3、建模
+    clf=DecisionTreeClassifier(criterion='entropy')
+    clf=clf.fit(X_train,X_test)
+    score=clf.score(X_test,y_test)
 def main():
     DecisionTreeClassifier1()
 main()
