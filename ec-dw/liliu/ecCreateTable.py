@@ -76,7 +76,7 @@ def main():
          ,'EC-客户资料-文件目录查询':{'tableName':'ec_dim_fileFolderList_temp','fieldStr':'autoID,CrmFolderItem,crmId,createUserId,createUserName,id,name,size,updateTime,remark1,remark2,remark3,remark4,remark5,remark6'}
          ,'客户标签管理-分组':{'tableName':'ec_dim_cusLabelBaseInfosGroup_temp','fieldStr':'autoID,labelGroupId,labelGroupName,labelGroupSort,labelGroupType,remark1,remark2,remark3,remark4,remark5,remark6'}
          ,'客户标签管理-标签':{'tableName':'ec_dim_cusLabelBaseInfosLabel_temp','fieldStr':'autoID,labelGroupId,labelId,labelName,labelSort,remark1,remark2,remark3,remark4,remark5,remark6'}
-         ,'客户标签列表   ':{'tableName':'ec_dim_cusLabelList_temp','fieldStr':'autoID,crmId,labelId,remark1,remark2,remark3,remark4,remark5,remark6'}
+         ,'客户标签列表':{'tableName':'ec_dim_cusLabelList_temp','fieldStr':'autoID,crmId,labelId,remark1,remark2,remark3,remark4,remark5,remark6'}
          ,'客户进展列表':{'tableName':'ec_dim_cusStageBaseInfos_temp','fieldStr':'autoID,name,stage,status,remark1,remark2,remark3,remark4,remark5,remark6'}
          ,'客户头像':{'tableName':'ec_dim_cusImagesList_temp','fieldStr':'autoID,crmId,face,name,remark1,remark2,remark3,remark4,remark5,remark6'}
          ,'客户轨迹':{'tableName':'ec_dim_cusTrajectoryBaseInfos_temp','fieldStr':'autoID,levelOneID,levelOneName,TrajectoryID,TrajectoryName,remark1,remark2,remark3,remark4,remark5,remark6'}
