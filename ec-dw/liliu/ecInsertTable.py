@@ -88,10 +88,12 @@ def jieXiData(tablename, dataTemp):
     try:
         resultContent = dataTemp  # 去掉空格
         dicContent = eval(str(resultContent))
-        if 'EC_dim_customerAutoInfo' in tablename :  # 获取所有的客户
+        if 'EC_dim_customerAutoInfo' in tablename:  # 企业的自定义字段信息
             dicListData = dicContent['data']
-        # elif 'fieldParams' in dicContent['data']: #获取级联的字段
-        #     dicListData=dicContent['data']['fieldParams']
+        if 'EC_dim_customerContactAutoInfo' in tablename:  # 企业联系人的自定义字段
+            dicListData = dicContent['data']
+        elif 'ec_dim_enum' in tablename: #获取级联的字段
+            dicListData=dicContent['data']['fieldParams']
         # elif tablename=='depts' : #获取组织机构的部门
         #     dicListData = dicContent['data'][tablename]
         #     tablename='EC_dim_depts'
@@ -126,6 +128,8 @@ def createAndInsertTable(dicListData, tablename):
         fieldTemp = [str(i) for i in list(keyLengthMax)]  # 取出所有的key，当作字段
         if 'EC_dim_customerAutoInfo' in tablename:  # 企业的自定义字段信息 接口
             fieldTemp.remove('fieldParam')
+        if 'EC_dim_customerContactAutoInfo' in tablename:  # 企业联系人的自定义字段 接口
+            fieldTemp.remove('params')
         fieldList = ','.join(fieldTemp)  # 组装-字段列表 拼接insert语句的sql
         # print(fieldList)
         # endregion
@@ -137,7 +141,7 @@ def createAndInsertTable(dicListData, tablename):
             # region 循环所有的键
             # for j in rowT: #循环所有的键
             for j in keyLengthMax:  # 循环所有的键
-                #region 企业的自定义字段信息 接口
+                #region 1、企业的自定义字段信息 接口
                 if 'EC_dim_customerAutoInfo' in tablename: #企业的自定义字段信息-主表信息
                     tempValue = str(rowT[j]) if j in rowT else ''  # 判断当前的key，在不是当前的list里面，如果不在，则赋空值
                     if j!='fieldParam':
@@ -152,6 +156,29 @@ def createAndInsertTable(dicListData, tablename):
                             tempC.append(str(rowT['fieldId']))
                             childTempList.append(tuple(tempC))
                         writeDBChildTable('EC_dim_customerAutoInfoChild_temp', 'paramId,paramName,paramSort,parentID', childTempList, len(childTempList[0]))
+                #endregion
+
+                #region 2、企业联系人的自定义字段信息 接口
+                if 'EC_dim_customerContactAutoInfo' in tablename: #企业联系人的自定义字段信息-主表信息
+                    tempValue = str(rowT[j]) if j in rowT else ''  # 判断当前的key，在不是当前的list里面，如果不在，则赋空值
+                    if j!='params':
+                        temp.append(str(tempValue))
+                    if isinstance(rowT[j], (list)) and j=='params' and len(rowT[j])>0: #用户自定义信息
+                        childTempList=[]
+                        for childTemp in rowT[j]: ##企业的自定义字段信息-子表信息
+                            tempC=[]
+                            tempC.append(str(childTemp['id']))
+                            tempC.append(childTemp['name'])
+                            tempC.append(str(childTemp['childNumber']))
+                            tempC.append(str(rowT['id']))
+                            childTempList.append(tuple(tempC))
+                        writeDBChildTable('EC_dim_customerContactAutoInfoChild_temp', 'paramId,paramName,paramchildNumber,parentID', childTempList, len(childTempList[0]))
+                #endregion
+
+                #region 3、级联 接口
+                if 'ec_dim_enum' in tablename:
+                    tempValue = str(rowT[j]) if j in rowT else ''  # 判断当前的key，在不是当前的list里面，如果不在，则赋空值
+                    temp.append(str(tempValue))
                 #endregion
             listTReturn.append(tuple(temp))
             # endregion
@@ -175,6 +202,7 @@ def get_sign(app_id, app_secret, timestamp):
 # endregion
 
 # region main方法
+isContinue=True
 if __name__ == '__main__':
     # 第一步：获取签名  https://open.workec.com/newdoc/doc/1hzrmo5Kq
     timestamp = int(round(time.time() * 1000))
@@ -191,13 +219,13 @@ if __name__ == '__main__':
 
     # 第二步：拼接header，请求头信息  https://open.workec.com/newdoc/doc/zKMGwg1NN
     dicTemp = {
-            '企业的自定义字段信息': {'tableName': 'EC_dim_customerAutoInfo_temp', 'requestStyle': 'get',
-                             'interfaceUrl': 'https://open.workec.com/v2/config/getFieldMapping', 'params': ''}
+            # '企业的自定义字段信息': {'tableName': 'EC_dim_customerAutoInfo_temp', 'requestStyle': 'get',
+            #                  'interfaceUrl': 'https://open.workec.com/v2/config/getFieldMapping', 'params': '','IsXunHuan':'否'}
+            # ,'企业联系人的自定义字段': {'tableName': 'EC_dim_customerContactAutoInfo_temp', 'requestStyle': 'get',
+            #                   'interfaceUrl': 'https://open.workec.com/v2/config/getBookFieldMapping', 'params': '','IsXunHuan':'否'}
             # ,'客户枚举相关字段': {'tableName': 'ec_dim_enum_temp', 'requestStyle': 'post',
             #                 'interfaceUrl': 'https://open.workec.com/v2/customer/getCasCadeFieldMapping', 'params': {
-            #                             "fieldIds": [81655955, 81654764, 81656622, 81619239, 81656624, 81656625, 81649962]}}
-            # , '企业联系人的自定义字段': {'tableName': 'EC_dim_customerContactAutoInfo_temp', 'requestStyle': 'get',
-            #                   'interfaceUrl': 'https://open.workec.com/v2/config/getBookFieldMapping', 'params': ''}
+            #                             "fieldIds": [81655955, 81654764, 81656622, 81619239, 81656624, 81656625, 81649962],"lastId":2283296},'IsXunHuan':'是'}
             # , '组织架构-部门': {'tableName': 'depts', 'requestStyle': 'get',
             #               'interfaceUrl': 'https://open.workec.com/v2/org/struct/info', 'params': ''}
             # , '组织架构-人员': {'tableName': 'users', 'requestStyle': 'get',
@@ -255,12 +283,25 @@ if __name__ == '__main__':
             params = json.dumps(params)
             requeststyle = dicTemp[dicT]['requestStyle']
 
-            if requeststyle == 'get':
-                returnResponse = requests.get(url=interfaceUrl, headers=heads, data=params)
-            else:
-                returnResponse = requests.post(url=interfaceUrl, headers=heads, data=params)
-            data = returnResponse.json()
-            jieXiData(tableName, data)
+            if dicTemp[dicT]['IsXunHuan']=='是':
+                if 'ec_dim_enum' in tableName:
+                    while isContinue:
+                        if requeststyle == 'get':
+                            returnResponse = requests.get(url=interfaceUrl, headers=heads, data=params)
+                        else:
+                            returnResponse = requests.post(url=interfaceUrl, headers=heads, data=params)
+                        data = returnResponse.json()
+                        jieXiData(tableName, data)
+                        # eval(params)['lastId']=2285885
+                        # print(eval(params)['lastId'])
+                        isContinue = False
+            elif dicTemp[dicT]['IsXunHuan']=='否':
+                if requeststyle == 'get':
+                    returnResponse = requests.get(url=interfaceUrl, headers=heads, data=params)
+                else:
+                    returnResponse = requests.post(url=interfaceUrl, headers=heads, data=params)
+                data = returnResponse.json()
+                jieXiData(tableName, data)
 
     # 获取级联字段-数据："fieldIds": [81654764]  参数：{"fieldIds":[81649962]}
     # 客户--客户行业分类：81655955

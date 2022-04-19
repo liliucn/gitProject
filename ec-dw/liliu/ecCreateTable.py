@@ -76,7 +76,7 @@ def main():
          ,'EC-客户资料-文件目录查询':{'tableName':'ec_dim_fileFolderList_temp','fieldStr':'autoID,CrmFolderItem,crmId,createUserId,createUserName,id,name,size,updateTime,remark1,remark2,remark3,remark4,remark5,remark6'}
          ,'客户标签管理-分组':{'tableName':'ec_dim_cusLabelBaseInfosGroup_temp','fieldStr':'autoID,labelGroupId,labelGroupName,labelGroupSort,labelGroupType,remark1,remark2,remark3,remark4,remark5,remark6'}
          ,'客户标签管理-标签':{'tableName':'ec_dim_cusLabelBaseInfosLabel_temp','fieldStr':'autoID,labelGroupId,labelId,labelName,labelSort,remark1,remark2,remark3,remark4,remark5,remark6'}
-         ,'客户标签列表':{'tableName':'ec_dim_cusLabelList_temp','fieldStr':'autoID,crmId,labelId,remark1,remark2,remark3,remark4,remark5,remark6'}
+         ,'客户标签列表   ':{'tableName':'ec_dim_cusLabelList_temp','fieldStr':'autoID,crmId,labelId,remark1,remark2,remark3,remark4,remark5,remark6'}
          ,'客户进展列表':{'tableName':'ec_dim_cusStageBaseInfos_temp','fieldStr':'autoID,name,stage,status,remark1,remark2,remark3,remark4,remark5,remark6'}
          ,'客户头像':{'tableName':'ec_dim_cusImagesList_temp','fieldStr':'autoID,crmId,face,name,remark1,remark2,remark3,remark4,remark5,remark6'}
          ,'客户轨迹':{'tableName':'ec_dim_cusTrajectoryBaseInfos_temp','fieldStr':'autoID,levelOneID,levelOneName,TrajectoryID,TrajectoryName,remark1,remark2,remark3,remark4,remark5,remark6'}
@@ -87,7 +87,8 @@ def main():
          ,'企业的自定义字段信息':{'tableName':'EC_dim_customerAutoInfo_temp','fieldStr':'autoID,fieldGroupId,fieldGroupName,fieldGroupSort,fieldId,fieldName,fieldSort,filedType,category,remark1,remark2,remark3,remark4,remark5,remark6'}
          ,'企业的自定义字段信息_子表':{'tableName':'EC_dim_customerAutoInfoChild_temp','fieldStr':'autoID,paramId,paramName,paramSort,parentID,remark1,remark2,remark3,remark4,remark5,remark6'}
          ,'企业联系人的自定义字段':{'tableName':'EC_dim_customerContactAutoInfo_temp','fieldStr':'autoID,id,text,type,isMust,regex,level,remark1,remark2,remark3,remark4,remark5,remark6'}
-         }
+        , '企业联系人的自定义字段_子表': {'tableName': 'EC_dim_customerContactAutoInfoChild_temp','fieldStr': 'autoID,paramId,paramName,paramchildNumber,parentID,remark1,remark2,remark3,remark4,remark5,remark6'}
+       }
     #执行createSql方法
     for dicT in dicTemp:
         if dicT != '':
