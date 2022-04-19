@@ -74,7 +74,7 @@ def writeDBChildTable(tableName, fieldList, data, fieldLength):
         # region 新增记录
         tempFormat = str('%s,' * fieldLength)[:-1]
         insertSql = "insert into  " + tableName + "  (" + fieldList + ") values (" + tempFormat + ")"
-        print(insertSql)
+        # print(insertSql)
         executeMany(insertSql, data)
         # endregion
     except (OSError, TypeError) as reason:
@@ -88,9 +88,8 @@ def jieXiData(tablename, dataTemp):
     try:
         resultContent = dataTemp  # 去掉空格
         dicContent = eval(str(resultContent))
-        # print(dicContent)
-        if 'list' in dicContent['data']:  # 获取所有的客户
-            dicListData = dicContent['data']['list']
+        if 'EC_dim_customerAutoInfo' in tablename :  # 获取所有的客户
+            dicListData = dicContent['data']
         # elif 'fieldParams' in dicContent['data']: #获取级联的字段
         #     dicListData=dicContent['data']['fieldParams']
         # elif tablename=='depts' : #获取组织机构的部门
@@ -106,6 +105,7 @@ def jieXiData(tablename, dataTemp):
         #     daTe.sort(key=lambda x: x[0], reverse=True)  # 降序排列
         #     keyLengthMax = daTe.keys()
         #     print(daTe)
+        # print(dicListData)
         createAndInsertTable(dicListData, tablename)
     except (OSError, TypeError) as reason:
         shop_logging('jieXiData:报错' + str(reason))
@@ -121,11 +121,13 @@ def createAndInsertTable(dicListData, tablename):
         daTe.sort(key=lambda x: x[0], reverse=True)  # 降序排列
         keyLengthMax = daTe[0][1].keys()
         # dicListDataList=dict(dicContent['data']['list'][0])
-
         # region 拼接insert into 语句的前边字段部分
         # fieldTemp=['custom_'+str(i) for i in list(dicListDataList.keys())]
         fieldTemp = [str(i) for i in list(keyLengthMax)]  # 取出所有的key，当作字段
+        if 'EC_dim_customerAutoInfo' in tablename:  # 企业的自定义字段信息 接口
+            fieldTemp.remove('fieldParam')
         fieldList = ','.join(fieldTemp)  # 组装-字段列表 拼接insert语句的sql
+        # print(fieldList)
         # endregion
         listTReturn = []
         m = 0
@@ -135,10 +137,25 @@ def createAndInsertTable(dicListData, tablename):
             # region 循环所有的键
             # for j in rowT: #循环所有的键
             for j in keyLengthMax:  # 循环所有的键
-                tempValue = str(rowT[j]) if j in rowT else ''  # 判断当前的key，在不是当前的list里面，如果不在，则赋空值
-                temp.append(str(tempValue))
+                #region 企业的自定义字段信息 接口
+                if 'EC_dim_customerAutoInfo' in tablename: #企业的自定义字段信息-主表信息
+                    tempValue = str(rowT[j]) if j in rowT else ''  # 判断当前的key，在不是当前的list里面，如果不在，则赋空值
+                    if j!='fieldParam':
+                        temp.append(str(tempValue))
+                    if isinstance(rowT[j], (list)) and j=='fieldParam' and len(rowT[j])>0: #用户自定义信息
+                        childTempList=[]
+                        for childTemp in rowT[j]: ##企业的自定义字段信息-子表信息
+                            tempC=[]
+                            tempC.append(str(childTemp['paramId']))
+                            tempC.append(childTemp['paramName'])
+                            tempC.append(str(childTemp['paramSort']))
+                            tempC.append(str(rowT['fieldId']))
+                            childTempList.append(tuple(tempC))
+                        writeDBChildTable('EC_dim_customerAutoInfoChild_temp', 'paramId,paramName,paramSort,parentID', childTempList, len(childTempList[0]))
+                #endregion
             listTReturn.append(tuple(temp))
             # endregion
+        print(len(fieldTemp),len(listTReturn[0]))
         if len(fieldTemp) == len(listTReturn[0]):
             print(len(fieldTemp), len(listTReturn[0]), fieldList)
             # 将网页的内容解析入库；所有字段
@@ -234,7 +251,7 @@ if __name__ == '__main__':
             tableName = dicTemp[dicT]['tableName']
             interfaceUrl = dicTemp[dicT]['interfaceUrl']
             params = dicTemp[dicT]['params']
-            print(tableName, interfaceUrl, params)
+            # print(tableName, interfaceUrl, params)
             params = json.dumps(params)
             requeststyle = dicTemp[dicT]['requestStyle']
 

@@ -84,7 +84,8 @@ def main():
          ,'删除客户':{'tableName':'ec_dim_customer_del_temp','fieldStr':'autoID,crmId,delTime,id,remark1,remark2,remark3,remark4,remark5,remark6'}
          ,'查询任务':{'tableName':'ec_dim_taskList_temp','fieldStr':'autoID,taskId,ruleId,title,noticeTime,endTime,createName,createUserId,exeName,exeId,exeNum,taskNum,detail,ruleType,taskType,remark1,remark2,remark3,remark4,remark5,remark6'}
          ,'规则|任务类型':{'tableName':'ec_dim_kindType_temp','fieldStr':'autoID,typeID,typeName,kindType,remark1,remark2,remark3,remark4,remark5,remark6'}
-         ,'企业的自定义字段信息':{'tableName':'EC_dim_customerAutoInfo_temp','fieldStr':'autoID,fieldGroupId,fieldGroupName,fieldGroupSort,fieldId,fieldName,fieldSort,fieldType,category,remark1,remark2,remark3,remark4,remark5,remark6'}
+         ,'企业的自定义字段信息':{'tableName':'EC_dim_customerAutoInfo_temp','fieldStr':'autoID,fieldGroupId,fieldGroupName,fieldGroupSort,fieldId,fieldName,fieldSort,filedType,category,remark1,remark2,remark3,remark4,remark5,remark6'}
+         ,'企业的自定义字段信息_子表':{'tableName':'EC_dim_customerAutoInfoChild_temp','fieldStr':'autoID,paramId,paramName,paramSort,parentID,remark1,remark2,remark3,remark4,remark5,remark6'}
          ,'企业联系人的自定义字段':{'tableName':'EC_dim_customerContactAutoInfo_temp','fieldStr':'autoID,id,text,type,isMust,regex,level,remark1,remark2,remark3,remark4,remark5,remark6'}
          }
     #执行createSql方法
