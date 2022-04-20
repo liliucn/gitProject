@@ -153,7 +153,7 @@ def createAndInsertTable(dicListData, tablename):
                             tempC.append(str(childTemp['paramSort']))
                             tempC.append(str(rowT['fieldId']))
                             childTempList.append(tuple(tempC))
-                        writeDBChildTable('EC_dim_customerAutoInfoChild_temp', 'paramId,paramName,paramSort,parentID', childTempList, len(childTempList[0]))
+                        writeDBChildTable('EC_dim_customerAutoInfoChild', 'paramId,paramName,paramSort,parentID', childTempList, len(childTempList[0]))
                 #endregion
 
                 #region 2、企业联系人的自定义字段信息 接口
@@ -170,7 +170,7 @@ def createAndInsertTable(dicListData, tablename):
                             tempC.append(str(childTemp['childNumber']))
                             tempC.append(str(rowT['id']))
                             childTempList.append(tuple(tempC))
-                        writeDBChildTable('EC_dim_customerContactAutoInfoChild_temp', 'paramId,paramName,paramchildNumber,parentID', childTempList, len(childTempList[0]))
+                        writeDBChildTable('EC_dim_customerContactAutoInfoChild', 'paramId,paramName,paramchildNumber,parentID', childTempList, len(childTempList[0]))
                 #endregion
 
                 #region 3、级联 接口
@@ -179,14 +179,14 @@ def createAndInsertTable(dicListData, tablename):
                     temp.append(str(tempValue))
                 #endregion
 
-                #region 4、
+                #region 4、组织架构-部门|人员
                 if 'ec_dim_org' in tablename:
                     tempValue = str(rowT[j]) if j in rowT else ''  # 判断当前的key，在不是当前的list里面，如果不在，则赋空值
                     temp.append(str(tempValue))
                 #endregion
             listTReturn.append(tuple(temp))
             # endregion
-        print(len(fieldTemp),len(listTReturn[0]))
+        # print(len(fieldTemp),len(listTReturn[0]))
         if len(fieldTemp) == len(listTReturn[0]):
             print(len(fieldTemp), len(listTReturn[0]), fieldList)
             # 将网页的内容解析入库；所有字段
@@ -223,53 +223,53 @@ if __name__ == '__main__':
 
     # 第二步：拼接header，请求头信息  https://open.workec.com/newdoc/doc/zKMGwg1NN
     dicTemp = {
-            '企业的自定义字段信息': {'tableName': 'EC_dim_customerAutoInfo_temp', 'requestStyle': 'get',
+            '企业的自定义字段信息': {'tableName': 'EC_dim_customerAutoInfo', 'requestStyle': 'get',
                              'interfaceUrl': 'https://open.workec.com/v2/config/getFieldMapping', 'params': '','IsXunHuan':'否'}
-            ,'企业联系人的自定义字段': {'tableName': 'EC_dim_customerContactAutoInfo_temp', 'requestStyle': 'get',
+            ,'企业联系人的自定义字段': {'tableName': 'EC_dim_customerContactAutoInfo', 'requestStyle': 'get',
                               'interfaceUrl': 'https://open.workec.com/v2/config/getBookFieldMapping', 'params': '','IsXunHuan':'否'}
-            ,'组织架构-部门': {'tableName': 'ec_dim_orgdepts_temp', 'requestStyle': 'get',
+            ,'组织架构-部门': {'tableName': 'ec_dim_orgdepts', 'requestStyle': 'get',
                           'interfaceUrl': 'https://open.workec.com/v2/org/struct/info', 'params': '','IsXunHuan':'否'}
-            ,'组织架构-人员': {'tableName': 'ec_dim_orgusers_temp', 'requestStyle': 'get',
+            ,'组织架构-人员': {'tableName': 'ec_dim_orgusers', 'requestStyle': 'get',
                           'interfaceUrl': 'https://open.workec.com/v2/org/struct/info', 'params': '','IsXunHuan':'否'}
-            # '客户枚举相关字段': {'tableName': 'ec_dim_enum_temp', 'requestStyle': 'post',
+            # '客户枚举相关字段': {'tableName': 'ec_dim_enum', 'requestStyle': 'post',
             #                 'interfaceUrl': 'https://open.workec.com/v2/customer/getCasCadeFieldMapping', 'params': {
             #                             "fieldIds": [81655955, 81654764, 81656622, 81619239, 81656624, 81656625, 81649962],"lastId":2283296},'IsXunHuan':'是'}
-            # , '客户列表': {'tableName': 'ec_dim_customer_temp', 'requestStyle': 'post',
+            # , '客户列表': {'tableName': 'ec_dim_customer', 'requestStyle': 'post',
             #            'interfaceUrl': 'https://open.workec.com/v2/customer/queryList',
             #            'params': {"pageNo": "1", "pageSize": "200"}}
-            # , '客户联系人信息': {'tableName': 'ec_dim_customerContact_temp', 'requestStyle': 'post',
+            # , '客户联系人信息': {'tableName': 'ec_dim_customerContact', 'requestStyle': 'post',
             #               'interfaceUrl': 'https://open.workec.com/v2/contactbook/list',
             #               'params': {"crmId": 5625884449, "optUserId": 17640187}}
-            # , '客户资料-文件列表查询': {'tableName': 'ec_dim_fileList_temp', 'requestStyle': 'get',
+            # , '客户资料-文件列表查询': {'tableName': 'ec_dim_fileList', 'requestStyle': 'get',
             #                   'interfaceUrl': 'https://open.workec.com/v2/customer/file/list',
             #                   'params': {"crmIds": "5624387252,5624487824", "folderId": 1}}
-            # , '客户资料-文件目录查询': {'tableName': 'ec_dim_fileFolderList_temp', 'requestStyle': 'get',
+            # , '客户资料-文件目录查询': {'tableName': 'ec_dim_fileFolderList', 'requestStyle': 'get',
             #                   'interfaceUrl': 'https://open.workec.com/v2/customer/folder/list',
             #                   'params': {"crmIds": "5624387252,5624487824"}}
-            # , '客户标签管理-分组': {'tableName': 'ec_dim_cusLabelBaseInfosGroup_temp', 'requestStyle': 'get',
+            # , '客户标签管理-分组': {'tableName': 'ec_dim_cusLabelBaseInfosGroup', 'requestStyle': 'get',
             #                 'interfaceUrl': 'https://open.workec.com/v2/label/getLabelInfo', 'params': ''}
-            # , '客户标签管理-标签': {'tableName': 'ec_dim_cusLabelBaseInfosLabel_temp', 'requestStyle': 'get',
+            # , '客户标签管理-标签': {'tableName': 'ec_dim_cusLabelBaseInfosLabel', 'requestStyle': 'get',
             #                 'interfaceUrl': 'https://open.workec.com/v2/label/getLabelInfo', 'params': ''}
-            # , '客户标签列表': {'tableName': 'ec_dim_cusLabelList_temp', 'requestStyle': 'get',
+            # , '客户标签列表': {'tableName': 'ec_dim_cusLabelList', 'requestStyle': 'get',
             #              'interfaceUrl': 'https://open.workec.com/v2/customer/queryLabel',
             #              'params': {"crmIds": "5624387252,5624487824"}}
-            # , '客户进展列表': {'tableName': 'ec_dim_cusStageBaseInfos_temp', 'requestStyle': 'post',
+            # , '客户进展列表': {'tableName': 'ec_dim_cusStageBaseInfos', 'requestStyle': 'post',
             #              'interfaceUrl': 'https://open.workec.com/v2/config/getStages', 'params': ''}
-            # , '客户头像列表': {'tableName': 'ec_dim_cusImagesList_temp', 'requestStyle': 'get',
+            # , '客户头像列表': {'tableName': 'ec_dim_cusImagesList', 'requestStyle': 'get',
             #              'interfaceUrl': 'https://open.workec.com/v2/customer/face', 'params': ''}
-            # , '查询客户轨迹': {'tableName': 'ec_dim_cusTrajectory_temp', 'requestStyle': 'get',
+            # , '查询客户轨迹': {'tableName': 'ec_dim_cusTrajectory', 'requestStyle': 'get',
             #              'interfaceUrl': 'https://open.workec.com/v2/customer/getTrajectory', 'params': {
             #         "date": {
             #             "endTime": "2022-03-25 17:00:00",
             #             "startTime": "2022-02-28 00:00:00"
             #         }}}
-            # , '删除客户': {'tableName': 'ec_dim_customer_del_temp', 'requestStyle': 'get',
+            # , '删除客户': {'tableName': 'ec_dim_customer_del', 'requestStyle': 'get',
             #            'interfaceUrl': 'https://open.workec.com/v2/customer/delcrms', 'params': {
             #         "startTime": "2022-03-18 00:00:00",
             #         "endTime": "2022-03-24 00:00:00",
             #         "lastId": ""
             #     }}
-            # , '查询任务 ': {'tableName': 'ec_dim_taskList_temp', 'requestStyle': 'get',
+            # , '查询任务 ': {'tableName': 'ec_dim_taskList', 'requestStyle': 'get',
             #             'interfaceUrl': 'https://open.workec.com/v2/task/query', 'params': {
             #         "userType": 1,  # 1 我的任务 2 团队任务
             #         "exeType": 0,   # 执行与否（0 待执行 1 已结束 ）
