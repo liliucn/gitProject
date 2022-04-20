@@ -94,12 +94,10 @@ def jieXiData(tablename, dataTemp):
             dicListData = dicContent['data']
         elif 'ec_dim_enum' in tablename: #获取级联的字段
             dicListData=dicContent['data']['fieldParams']
-        # elif tablename=='depts' : #获取组织机构的部门
-        #     dicListData = dicContent['data'][tablename]
-        #     tablename='EC_dim_depts'
-        # elif tablename=='users' : #获取组织机构的人员
-        #     dicListData = dicContent['data'][tablename]
-        #     tablename='EC_dim_users'
+        elif 'depts' in tablename: #获取组织机构的部门
+            dicListData = dicContent['data']['depts']
+        elif 'users' in tablename:#获取组织机构的人员
+            dicListData = dicContent['data']['users']
         # elif 'fieldParam' in dicContent['data'][0]:# 获取 企业的自定义字段信息 【没完，需要自定义组装数据集】
         #     dicListData=dict(dicContent['data'][0])
         #     print(dicListData['fieldParam'])
@@ -180,6 +178,12 @@ def createAndInsertTable(dicListData, tablename):
                     tempValue = str(rowT[j]) if j in rowT else ''  # 判断当前的key，在不是当前的list里面，如果不在，则赋空值
                     temp.append(str(tempValue))
                 #endregion
+
+                #region 4、
+                if 'ec_dim_org' in tablename:
+                    tempValue = str(rowT[j]) if j in rowT else ''  # 判断当前的key，在不是当前的list里面，如果不在，则赋空值
+                    temp.append(str(tempValue))
+                #endregion
             listTReturn.append(tuple(temp))
             # endregion
         print(len(fieldTemp),len(listTReturn[0]))
@@ -219,18 +223,17 @@ if __name__ == '__main__':
 
     # 第二步：拼接header，请求头信息  https://open.workec.com/newdoc/doc/zKMGwg1NN
     dicTemp = {
-            # '企业的自定义字段信息': {'tableName': 'EC_dim_customerAutoInfo_temp', 'requestStyle': 'get',
-            #                  'interfaceUrl': 'https://open.workec.com/v2/config/getFieldMapping', 'params': '','IsXunHuan':'否'}
-            # ,'企业联系人的自定义字段': {'tableName': 'EC_dim_customerContactAutoInfo_temp', 'requestStyle': 'get',
-            #                   'interfaceUrl': 'https://open.workec.com/v2/config/getBookFieldMapping', 'params': '','IsXunHuan':'否'}
-            # ,'客户枚举相关字段': {'tableName': 'ec_dim_enum_temp', 'requestStyle': 'post',
+            '企业的自定义字段信息': {'tableName': 'EC_dim_customerAutoInfo_temp', 'requestStyle': 'get',
+                             'interfaceUrl': 'https://open.workec.com/v2/config/getFieldMapping', 'params': '','IsXunHuan':'否'}
+            ,'企业联系人的自定义字段': {'tableName': 'EC_dim_customerContactAutoInfo_temp', 'requestStyle': 'get',
+                              'interfaceUrl': 'https://open.workec.com/v2/config/getBookFieldMapping', 'params': '','IsXunHuan':'否'}
+            ,'组织架构-部门': {'tableName': 'ec_dim_orgdepts_temp', 'requestStyle': 'get',
+                          'interfaceUrl': 'https://open.workec.com/v2/org/struct/info', 'params': '','IsXunHuan':'否'}
+            ,'组织架构-人员': {'tableName': 'ec_dim_orgusers_temp', 'requestStyle': 'get',
+                          'interfaceUrl': 'https://open.workec.com/v2/org/struct/info', 'params': '','IsXunHuan':'否'}
+            # '客户枚举相关字段': {'tableName': 'ec_dim_enum_temp', 'requestStyle': 'post',
             #                 'interfaceUrl': 'https://open.workec.com/v2/customer/getCasCadeFieldMapping', 'params': {
             #                             "fieldIds": [81655955, 81654764, 81656622, 81619239, 81656624, 81656625, 81649962],"lastId":2283296},'IsXunHuan':'是'}
-            # , '组织架构-部门': {'tableName': 'depts', 'requestStyle': 'get',
-            #               'interfaceUrl': 'https://open.workec.com/v2/org/struct/info', 'params': ''}
-            # , '组织架构-人员': {'tableName': 'users', 'requestStyle': 'get',
-            #               'interfaceUrl': 'https://open.workec.com/v2/org/struct/info', 'params': ''}
-            #
             # , '客户列表': {'tableName': 'ec_dim_customer_temp', 'requestStyle': 'post',
             #            'interfaceUrl': 'https://open.workec.com/v2/customer/queryList',
             #            'params': {"pageNo": "1", "pageSize": "200"}}
@@ -250,7 +253,7 @@ if __name__ == '__main__':
             # , '客户标签列表': {'tableName': 'ec_dim_cusLabelList_temp', 'requestStyle': 'get',
             #              'interfaceUrl': 'https://open.workec.com/v2/customer/queryLabel',
             #              'params': {"crmIds": "5624387252,5624487824"}}
-            # , '客户进展列表': {'tableName': 'ec_dim_cusStageBaseInfos_temp', 'requestStyle': 'get',
+            # , '客户进展列表': {'tableName': 'ec_dim_cusStageBaseInfos_temp', 'requestStyle': 'post',
             #              'interfaceUrl': 'https://open.workec.com/v2/config/getStages', 'params': ''}
             # , '客户头像列表': {'tableName': 'ec_dim_cusImagesList_temp', 'requestStyle': 'get',
             #              'interfaceUrl': 'https://open.workec.com/v2/customer/face', 'params': ''}
