@@ -205,7 +205,7 @@ def createAndInsertTable(dicListData, tablename):
                     temp.append(str(tempValue))
                 #endregion
 
-                #region 4、组织架构-部门|人员  
+                #region 4、组织架构-部门|人员
                 if 'ec_dim_org' in tablename:
                     tempValue = str(rowT[j]) if j in rowT else ''  # 判断当前的key，在不是当前的list里面，如果不在，则赋空值
                     temp.append(str(tempValue))
