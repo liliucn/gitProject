@@ -9,7 +9,7 @@ import pymssql
 # region https://www.cnblogs.com/PPWEI/p/11805247.html
 # import warnings
 # warnings.filterwarnings("ignore")
-import requests   
+import requests
 
 warnings.filterwarnings("ignore")
 requests.adapters.DEFAULT_RETRIES = 20
@@ -366,6 +366,7 @@ if __name__ == '__main__':
                             returnResponse = requests.post(url=interfaceUrl, headers=heads, data=paramsT)
                         data = returnResponse.json()
                         jieXiData(tableName, data)
+                        global isFirst
                         isFirst = isFirst+1
                         if hasNextPage==0:
                             isContinue = False
