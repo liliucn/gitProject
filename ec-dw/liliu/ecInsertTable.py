@@ -67,13 +67,24 @@ def executeMany(insertSql, data):
 def writeDBChildTable(tableName, fieldList, data, fieldLength):
     try:
         # region删除表记录
-        # delSql="delete from "+ tableName
-        # executeSql(delSql)
+        if tableName=='EC_dim_customerAutoInfo': #先删除主表，再删除子表
+            delSql="delete from "+ tableName+" ; delete from EC_dim_customerAutoInfoChild; ";
+            executeSql(delSql)
+        if tableName=='EC_dim_customerContactAutoInfo':#先删除主表，再删除子表
+            delSql="delete from "+ tableName+" ; delete from EC_dim_customerContactAutoInfoChild; ";
+            executeSql(delSql)
+        if tableName=='ec_dim_cusLabelBaseInfosGroup':#先删除主表，再删除子表
+            delSql="delete from "+ tableName+" ; delete from ec_dim_cusLabelBaseInfosLabel; ";
+            executeSql(delSql)
+        else:#没主子表时，只删除当前表表
+            delSql="delete from "+ tableName;
+            executeSql(delSql)
+
         # endregion
 
         # region 新增记录
         tempFormat = str('%s,' * fieldLength)[:-1]
-        insertSql = "insert into  " + tableName + "  (" + fieldList + ") values (" + tempFormat + ")"
+        insertSql = " insert into  " + tableName + "  (" + fieldList + ") values (" + tempFormat + ")"
         # print(insertSql)
         executeMany(insertSql, data)
         # endregion
@@ -98,6 +109,13 @@ def jieXiData(tablename, dataTemp):
             dicListData = dicContent['data']['depts']
         elif 'users' in tablename:#获取组织机构的人员
             dicListData = dicContent['data']['users']
+        elif 'ec_dim_cusLabelBaseInfosGroup' in tablename:#客户标签管理-分组
+            # print(dicContent['data'])
+            dicListData = dicContent['data']
+        elif 'ec_dim_cusStageBaseInfos' in tablename:  # 获取客户进展信息
+            # print(dicContent['data'])
+            dicListData = dicContent['data']
+
         # elif 'fieldParam' in dicContent['data'][0]:# 获取 企业的自定义字段信息 【没完，需要自定义组装数据集】
         #     dicListData=dict(dicContent['data'][0])
         #     print(dicListData['fieldParam'])
@@ -116,6 +134,11 @@ def jieXiData(tablename, dataTemp):
 # region 公共方法 执行建表和新增数据
 def createAndInsertTable(dicListData, tablename):
     try:
+        tableNameChild=''
+        fieldListChild=''
+        childTempList=[]
+        listTReturn = []
+
         # 取出返回list key最长的 取出最全的key当作字段名
         daTe = [[len(t), t] for t in dicListData]
         daTe.sort(key=lambda x: x[0], reverse=True)  # 降序排列
@@ -124,14 +147,21 @@ def createAndInsertTable(dicListData, tablename):
         # region 拼接insert into 语句的前边字段部分
         # fieldTemp=['custom_'+str(i) for i in list(dicListDataList.keys())]
         fieldTemp = [str(i) for i in list(keyLengthMax)]  # 取出所有的key，当作字段
-        if 'EC_dim_customerAutoInfo' in tablename:  # 企业的自定义字段信息 接口
+        if 'EC_dim_customerAutoInfo' in tablename:  # 企业的自定义字段信息 接口  【有子表】
             fieldTemp.remove('fieldParam')
-        if 'EC_dim_customerContactAutoInfo' in tablename:  # 企业联系人的自定义字段 接口
+            tableNameChild='EC_dim_customerAutoInfoChild'
+            fieldListChild='paramId,paramName,paramSort,parentID'
+        if 'EC_dim_customerContactAutoInfo' in tablename:  # 企业联系人的自定义字段 接口 【有子表】
             fieldTemp.remove('params')
+            tableNameChild='EC_dim_customerContactAutoInfoChild'
+            fieldListChild='paramId,paramName,paramchildNumber,parentID'
+        if 'ec_dim_cusLabelBaseInfosGroup' in tablename:  # 客户标签管理-分组 【有子表】
+            fieldTemp.remove('list')
+            tableNameChild='ec_dim_cusLabelBaseInfosLabel'
+            fieldListChild='classId,className,sort,parentID'
         fieldList = ','.join(fieldTemp)  # 组装-字段列表 拼接insert语句的sql
         # print(fieldList)
         # endregion
-        listTReturn = []
         m = 0
         for rowT in dicListData:
             m = m + 1
@@ -145,7 +175,6 @@ def createAndInsertTable(dicListData, tablename):
                     if j!='fieldParam':
                         temp.append(str(tempValue))
                     if isinstance(rowT[j], (list)) and j=='fieldParam' and len(rowT[j])>0: #用户自定义信息
-                        childTempList=[]
                         for childTemp in rowT[j]: ##企业的自定义字段信息-子表信息
                             tempC=[]
                             tempC.append(str(childTemp['paramId']))
@@ -153,7 +182,6 @@ def createAndInsertTable(dicListData, tablename):
                             tempC.append(str(childTemp['paramSort']))
                             tempC.append(str(rowT['fieldId']))
                             childTempList.append(tuple(tempC))
-                        writeDBChildTable('EC_dim_customerAutoInfoChild', 'paramId,paramName,paramSort,parentID', childTempList, len(childTempList[0]))
                 #endregion
 
                 #region 2、企业联系人的自定义字段信息 接口
@@ -162,7 +190,6 @@ def createAndInsertTable(dicListData, tablename):
                     if j!='params':
                         temp.append(str(tempValue))
                     if isinstance(rowT[j], (list)) and j=='params' and len(rowT[j])>0: #用户自定义信息
-                        childTempList=[]
                         for childTemp in rowT[j]: ##企业的自定义字段信息-子表信息
                             tempC=[]
                             tempC.append(str(childTemp['id']))
@@ -170,7 +197,6 @@ def createAndInsertTable(dicListData, tablename):
                             tempC.append(str(childTemp['childNumber']))
                             tempC.append(str(rowT['id']))
                             childTempList.append(tuple(tempC))
-                        writeDBChildTable('EC_dim_customerContactAutoInfoChild', 'paramId,paramName,paramchildNumber,parentID', childTempList, len(childTempList[0]))
                 #endregion
 
                 #region 3、级联 接口
@@ -184,6 +210,28 @@ def createAndInsertTable(dicListData, tablename):
                     tempValue = str(rowT[j]) if j in rowT else ''  # 判断当前的key，在不是当前的list里面，如果不在，则赋空值
                     temp.append(str(tempValue))
                 #endregion
+
+                #region 5、客户标签管理 - 分组
+                if 'ec_dim_cusLabelBaseInfosGroup' in tablename:  # 客户标签管理-分组
+                    tempValue = str(rowT[j]) if j in rowT else ''  # 判断当前的key，在不是当前的list里面，如果不在，则赋空值
+                    if j != 'list':
+                        temp.append(str(tempValue))
+                    if isinstance(rowT[j], (list)) and j == 'list' and len(rowT[j]) > 0:  # 用户自定义信息
+                        for childTemp in rowT[j]:  ##企业的自定义字段信息-子表信息
+                            tempC = []
+                            tempC.append(str(childTemp['classId']))
+                            tempC.append(childTemp['className'])
+                            tempC.append(str(childTemp['sort']))
+                            tempC.append(str(rowT['groupId']))
+                            childTempList.append(tuple(tempC))
+                #endregion
+
+                #region 6、获取客户进展信息
+                if 'ec_dim_cusStageBaseInfos' in tablename:
+                    tempValue = str(rowT[j]) if j in rowT else ''  # 判断当前的key，在不是当前的list里面，如果不在，则赋空值
+                    temp.append(str(tempValue))
+                #endregion
+
             listTReturn.append(tuple(temp))
             # endregion
         # print(len(fieldTemp),len(listTReturn[0]))
@@ -191,6 +239,8 @@ def createAndInsertTable(dicListData, tablename):
             print(len(fieldTemp), len(listTReturn[0]), fieldList)
             # 将网页的内容解析入库；所有字段
             writeDBChildTable(tablename, fieldList, listTReturn, len(listTReturn[0]))
+            if tableNameChild!='':
+                writeDBChildTable(tableNameChild, fieldListChild, childTempList, len(childTempList[0]))
     except (OSError, TypeError) as reason:
         shop_logging('CreateAndInsertTable:报错' + str(reason))
 
@@ -231,6 +281,12 @@ if __name__ == '__main__':
                           'interfaceUrl': 'https://open.workec.com/v2/org/struct/info', 'params': '','IsXunHuan':'否'}
             ,'组织架构-人员': {'tableName': 'ec_dim_orgusers', 'requestStyle': 'get',
                           'interfaceUrl': 'https://open.workec.com/v2/org/struct/info', 'params': '','IsXunHuan':'否'}
+            ,'客户标签管理-分组': {'tableName': 'ec_dim_cusLabelBaseInfosGroup', 'requestStyle': 'post',
+                            'interfaceUrl': 'https://open.workec.com/v2/label/getLabelInfo', 'params': '','IsXunHuan':'否'}
+            ,'客户进展列表': {'tableName': 'ec_dim_cusStageBaseInfos', 'requestStyle': 'get',
+                     'interfaceUrl': 'https://open.workec.com/v2/config/getStages', 'params': '','IsXunHuan':'否'}
+            # , '客户标签管理-标签': {'tableName': 'ec_dim_cusLabelBaseInfosLabel', 'requestStyle': 'get',
+            #                 'interfaceUrl': 'https://open.workec.com/v2/label/getLabelInfo', 'params': '','IsXunHuan':'否'}
             # '客户枚举相关字段': {'tableName': 'ec_dim_enum', 'requestStyle': 'post',
             #                 'interfaceUrl': 'https://open.workec.com/v2/customer/getCasCadeFieldMapping', 'params': {
             #                             "fieldIds": [81655955, 81654764, 81656622, 81619239, 81656624, 81656625, 81649962],"lastId":2283296},'IsXunHuan':'是'}
@@ -246,15 +302,10 @@ if __name__ == '__main__':
             # , '客户资料-文件目录查询': {'tableName': 'ec_dim_fileFolderList', 'requestStyle': 'get',
             #                   'interfaceUrl': 'https://open.workec.com/v2/customer/folder/list',
             #                   'params': {"crmIds": "5624387252,5624487824"}}
-            # , '客户标签管理-分组': {'tableName': 'ec_dim_cusLabelBaseInfosGroup', 'requestStyle': 'get',
-            #                 'interfaceUrl': 'https://open.workec.com/v2/label/getLabelInfo', 'params': ''}
-            # , '客户标签管理-标签': {'tableName': 'ec_dim_cusLabelBaseInfosLabel', 'requestStyle': 'get',
-            #                 'interfaceUrl': 'https://open.workec.com/v2/label/getLabelInfo', 'params': ''}
+
             # , '客户标签列表': {'tableName': 'ec_dim_cusLabelList', 'requestStyle': 'get',
             #              'interfaceUrl': 'https://open.workec.com/v2/customer/queryLabel',
             #              'params': {"crmIds": "5624387252,5624487824"}}
-            # , '客户进展列表': {'tableName': 'ec_dim_cusStageBaseInfos', 'requestStyle': 'post',
-            #              'interfaceUrl': 'https://open.workec.com/v2/config/getStages', 'params': ''}
             # , '客户头像列表': {'tableName': 'ec_dim_cusImagesList', 'requestStyle': 'get',
             #              'interfaceUrl': 'https://open.workec.com/v2/customer/face', 'params': ''}
             # , '查询客户轨迹': {'tableName': 'ec_dim_cusTrajectory', 'requestStyle': 'get',
