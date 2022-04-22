@@ -354,7 +354,7 @@ if __name__ == '__main__':
             if dicTemp[dicT]['IsXunHuan']=='是':
                 if 'ec_dim_enum' in tableName:
                     #region 级联字段
-                    dataList=getJilianData() #得到所有的级联字段
+                    dataList=getJilianData() #得到所有的级联字段，取企业自定义和联系人自定义字段 的字段ID
                     global isFirst #只有第一次才执行删除
                     isFirst=1
                     while isContinue:
@@ -366,7 +366,6 @@ if __name__ == '__main__':
                             returnResponse = requests.post(url=interfaceUrl, headers=heads, data=paramsT)
                         data = returnResponse.json()
                         jieXiData(tableName, data)
-                        global isFirst
                         isFirst = isFirst+1
                         if hasNextPage==0:
                             isContinue = False
