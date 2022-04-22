@@ -374,26 +374,26 @@ if __name__ == '__main__':
                             params['lastId']=lastId
                             isContinue = True
                     #endregion 级联字段
-                elif 'ec_dim_customer' in tableName:
-                    #region 客户信息
-                    global isFirst  # 只有第一次才执行删除
-                    isFirst = 1
-                    while isContinue:
-                        params['fieldIds'] = dataList
-                        paramsT = json.dumps(params)
-                        if requeststyle == 'get':
-                            returnResponse = requests.get(url=interfaceUrl, headers=heads, data=paramsT)
-                        else:
-                            returnResponse = requests.post(url=interfaceUrl, headers=heads, data=paramsT)
-                        data = returnResponse.json()
-                        jieXiData(tableName, data)
-                        isFirst = isFirst + 1
-                        if hasNextPage == 0:
-                            isContinue = False
-                            break;
-                        else:
-                            params['lastId'] = lastId
-                            isContinue = True
+                # elif 'ec_dim_customer' in tableName:
+                #     #region 客户信息
+                #     global isFirst  # 只有第一次才执行删除
+                #     isFirst = 1
+                #     while isContinue:
+                #         params['fieldIds'] = dataList
+                #         paramsT = json.dumps(params)
+                #         if requeststyle == 'get':
+                #             returnResponse = requests.get(url=interfaceUrl, headers=heads, data=paramsT)
+                #         else:
+                #             returnResponse = requests.post(url=interfaceUrl, headers=heads, data=paramsT)
+                #         data = returnResponse.json()
+                #         jieXiData(tableName, data)
+                #         isFirst = isFirst + 1
+                #         if hasNextPage == 0:
+                #             isContinue = False
+                #             break;
+                #         else:
+                #             params['lastId'] = lastId
+                #             isContinue = True
                     #endregion
             elif dicTemp[dicT]['IsXunHuan']=='否':
                 paramsP = json.dumps(params)
