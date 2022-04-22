@@ -68,27 +68,27 @@ def birthCreateSql(tableName_T,sqlTemp,tablenameT):
 def main():
 
     dicTemp={
-        # '客户列表':{'tableName':'ec_dim_customer','fieldStr':'autoID,followUserId,groupId,name,call,gender,birthday,isLunarBirthday,title,qq,mobile,phone,fax,email,company,companyUrl,companyAddress,memo,vocation,channel,prefecture,crmId,modifyTime,contactTime,createTime,lastFollowUserId,step,createUserId,wechat,wechats,emails,mobiles,storageTime,publicPondId,apiAdd,crmType,shareUserId,lastContactTime,stars,khhyflyj,khhyflej,sheng,shi,qx,dwxz,cp,remark1,remark2,remark3,remark4,remark5,remark6'}
-        #  ,'枚举表-级联字段':{'tableName':'ec_dim_enum','fieldStr':'autoID,fieldId,paramId,parentParamId,paramName,sort,remark1,remark2,remark3,remark4,remark5,remark6'}
-        #  ,'客户联系人信息':{'tableName':'ec_dim_customerContact','fieldStr':'autoID,id,crmId,corpid,createUserId,name,callName,title,mobile,mobileCode,phone,phoneCode,phoneExtension,qq,email,wechat,birthday,lunarBirthday,lunarLeap,memo,gender,createTime,updateTime,bumen,zhiwu,lxrcj,remark1,remark2,remark3,remark4,remark5,remark6'}
-        #  ,'组织架构-部门':{'tableName':'ec_dim_orgdepts','fieldStr':'autoID,deptId,deptName,parentDeptId,remark1,remark2,remark3,remark4,remark5,remark6'}
-        #  ,'组织架构-人员':{'tableName':'ec_dim_orgusers','fieldStr':'autoID,userId,userName,deptId,title,status,remark1,remark2,remark3,remark4,remark5,remark6'}
-        #  ,'EC-客户资料-文件列表查询':{'tableName':'ec_dim_fileList','fieldStr':'autoID,crmId,folderId,createUserId,createUserName,path,id,name,size,updateTime,remark1,remark2,remark3,remark4,remark5,remark6'}
-        #  ,'EC-客户资料-文件目录查询':{'tableName':'ec_dim_fileFolderList','fieldStr':'autoID,CrmFolderItem,crmId,createUserId,createUserName,id,name,size,updateTime,remark1,remark2,remark3,remark4,remark5,remark6'}
-         '客户标签管理-分组':{'tableName':'ec_dim_cusLabelBaseInfosGroup','fieldStr':'autoID,groupId,groupName,sort,type,remark1,remark2,remark3,remark4,remark5,remark6'}
+        '客户列表':{'tableName':'ec_dim_customer','fieldStr':'autoID,followUserId,groupId,name,call,gender,birthday,isLunarBirthday,title,qq,mobile,phone,fax,email,company,companyUrl,companyAddress,memo,vocation,channel,prefecture,crmId,modifyTime,contactTime,createTime,lastFollowUserId,step,createUserId,wechat,wechats,emails,mobiles,storageTime,publicPondId,apiAdd,crmType,shareUserId,lastContactTime,stars,khhyflyj,khhyflej,sheng,shi,qx,dwxz,cp,remark1,remark2,remark3,remark4,remark5,remark6'}
+         ,'枚举表-级联字段':{'tableName':'ec_dim_enum','fieldStr':'autoID,fieldId,paramId,parentParamId,paramName,sort,remark1,remark2,remark3,remark4,remark5,remark6'}
+         ,'客户联系人信息':{'tableName':'ec_dim_customerContact','fieldStr':'autoID,id,crmId,corpid,createUserId,name,callName,title,mobile,mobileCode,phone,phoneCode,phoneExtension,qq,email,wechat,birthday,lunarBirthday,lunarLeap,memo,gender,createTime,updateTime,bumen,zhiwu,lxrcj,remark1,remark2,remark3,remark4,remark5,remark6'}
+         ,'组织架构-部门':{'tableName':'ec_dim_orgdepts','fieldStr':'autoID,deptId,deptName,parentDeptId,remark1,remark2,remark3,remark4,remark5,remark6'}
+         ,'组织架构-人员':{'tableName':'ec_dim_orgusers','fieldStr':'autoID,userId,userName,deptId,title,status,remark1,remark2,remark3,remark4,remark5,remark6'}
+         ,'EC-客户资料-文件列表查询':{'tableName':'ec_dim_fileList','fieldStr':'autoID,crmId,folderId,createUserId,createUserName,path,id,name,size,updateTime,remark1,remark2,remark3,remark4,remark5,remark6'}
+         ,'EC-客户资料-文件目录查询':{'tableName':'ec_dim_fileFolderList','fieldStr':'autoID,CrmFolderItem,crmId,createUserId,createUserName,id,name,size,updateTime,remark1,remark2,remark3,remark4,remark5,remark6'}
+         ,'客户标签管理-分组':{'tableName':'ec_dim_cusLabelBaseInfosGroup','fieldStr':'autoID,groupId,groupName,sort,type,remark1,remark2,remark3,remark4,remark5,remark6'}
          ,'客户标签管理-标签':{'tableName':'ec_dim_cusLabelBaseInfosLabel','fieldStr':'autoID,classId,className,sort,parentID,remark1,remark2,remark3,remark4,remark5,remark6'}
-        #  ,'客户标签列表':{'tableName':'ec_dim_cusLabelList','fieldStr':'autoID,crmId,labelId,remark1,remark2,remark3,remark4,remark5,remark6'}
-        #  ,'客户进展列表':{'tableName':'ec_dim_cusStageBaseInfos','fieldStr':'autoID,name,stage,status,remark1,remark2,remark3,remark4,remark5,remark6'}
-        #  ,'客户头像':{'tableName':'ec_dim_cusImagesList','fieldStr':'autoID,crmId,face,name,remark1,remark2,remark3,remark4,remark5,remark6'}
-         # ,'客户轨迹':{'tableName':'ec_dim_cusTrajectoryBaseInfos','fieldStr':'autoID,levelOneID,levelOneName,TrajectoryID,TrajectoryName,remark1,remark2,remark3,remark4,remark5,remark6'}
-        #  ,'查询客户轨迹':{'tableName':'ec_dim_cusTrajectory','fieldStr':'autoID,content,createTime,crmId,receiveUserIds,trajectoryId,trajectoryType,userId,remark1,remark2,remark3,remark4,remark5,remark6'}
-        #  ,'删除客户':{'tableName':'ec_dim_customer_del','fieldStr':'autoID,crmId,delTime,id,remark1,remark2,remark3,remark4,remark5,remark6'}
-        #  ,'查询任务':{'tableName':'ec_dim_taskList','fieldStr':'autoID,taskId,ruleId,title,noticeTime,endTime,createName,createUserId,exeName,exeId,exeNum,taskNum,detail,ruleType,taskType,remark1,remark2,remark3,remark4,remark5,remark6'}
-        #  # ,'规则|任务类型':{'tableName':'ec_dim_kindType','fieldStr':'autoID,typeID,typeName,kindType,remark1,remark2,remark3,remark4,remark5,remark6'}
-        #  ,'企业的自定义字段信息':{'tableName':'EC_dim_customerAutoInfo','fieldStr':'autoID,fieldGroupId,fieldGroupName,fieldGroupSort,fieldId,fieldName,fieldSort,filedType,category,remark1,remark2,remark3,remark4,remark5,remark6'}
-        #  ,'企业的自定义字段信息_子表':{'tableName':'EC_dim_customerAutoInfoChild','fieldStr':'autoID,paramId,paramName,paramSort,parentID,remark1,remark2,remark3,remark4,remark5,remark6'}
-        #  ,'企业联系人的自定义字段':{'tableName':'EC_dim_customerContactAutoInfo','fieldStr':'autoID,id,text,type,isMust,regex,level,remark1,remark2,remark3,remark4,remark5,remark6'}
-        # , '企业联系人的自定义字段_子表': {'tableName': 'EC_dim_customerContactAutoInfoChild','fieldStr': 'autoID,paramId,paramName,paramchildNumber,parentID,remark1,remark2,remark3,remark4,remark5,remark6'}
+         ,'客户标签列表':{'tableName':'ec_dim_cusLabelList','fieldStr':'autoID,crmId,labelId,remark1,remark2,remark3,remark4,remark5,remark6'}
+         ,'客户进展列表':{'tableName':'ec_dim_cusStageBaseInfos','fieldStr':'autoID,name,stage,status,remark1,remark2,remark3,remark4,remark5,remark6'}
+         ,'客户头像':{'tableName':'ec_dim_cusImagesList','fieldStr':'autoID,crmId,face,name,remark1,remark2,remark3,remark4,remark5,remark6'}
+         ,'客户轨迹':{'tableName':'ec_dim_cusTrajectoryBaseInfos','fieldStr':'autoID,levelOneID,levelOneName,TrajectoryID,TrajectoryName,remark1,remark2,remark3,remark4,remark5,remark6'}
+         ,'查询客户轨迹':{'tableName':'ec_dim_cusTrajectory','fieldStr':'autoID,content,createTime,crmId,receiveUserIds,trajectoryId,trajectoryType,userId,remark1,remark2,remark3,remark4,remark5,remark6'}
+         ,'删除客户':{'tableName':'ec_dim_customer_del','fieldStr':'autoID,crmId,delTime,id,remark1,remark2,remark3,remark4,remark5,remark6'}
+         ,'查询任务':{'tableName':'ec_dim_taskList','fieldStr':'autoID,taskId,ruleId,title,noticeTime,endTime,createName,createUserId,exeName,exeId,exeNum,taskNum,detail,ruleType,taskType,remark1,remark2,remark3,remark4,remark5,remark6'}
+         # ,'规则|任务类型':{'tableName':'ec_dim_kindType','fieldStr':'autoID,typeID,typeName,kindType,remark1,remark2,remark3,remark4,remark5,remark6'}
+         ,'企业的自定义字段信息':{'tableName':'EC_dim_customerAutoInfo','fieldStr':'autoID,fieldGroupId,fieldGroupName,fieldGroupSort,fieldId,fieldName,fieldSort,filedType,category,remark1,remark2,remark3,remark4,remark5,remark6'}
+         ,'企业的自定义字段信息_子表':{'tableName':'EC_dim_customerAutoInfoChild','fieldStr':'autoID,paramId,paramName,paramSort,parentID,remark1,remark2,remark3,remark4,remark5,remark6'}
+         ,'企业联系人的自定义字段':{'tableName':'EC_dim_customerContactAutoInfo','fieldStr':'autoID,id,text,type,isMust,regex,level,remark1,remark2,remark3,remark4,remark5,remark6'}
+        , '企业联系人的自定义字段_子表': {'tableName': 'EC_dim_customerContactAutoInfoChild','fieldStr': 'autoID,paramId,paramName,paramchildNumber,parentID,remark1,remark2,remark3,remark4,remark5,remark6'}
        }
     #执行createSql方法
     for dicT in dicTemp:

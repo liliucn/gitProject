@@ -387,7 +387,6 @@ if __name__ == '__main__':
                 #             returnResponse = requests.post(url=interfaceUrl, headers=heads, data=paramsT)
                 #         data = returnResponse.json()
                 #         jieXiData(tableName, data)
-                #         global isFirst
                 #         isFirst = isFirst + 1
                 #         if hasNextPage == 0:
                 #             isContinue = False
