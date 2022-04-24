@@ -375,25 +375,26 @@ if __name__ == '__main__':
                             isContinue = True
                     #endregion 级联字段
                 elif 'ec_dim_customer' in tableName:
+                    print(1)
                     #region 客户信息
-                    global isFirst  # 只有第一次才执行删除
-                    isFirst = 1
-                    while isContinue:
-                        params['fieldIds'] = dataList
-                        paramsT = json.dumps(params)
-                        if requeststyle == 'get':
-                            returnResponse = requests.get(url=interfaceUrl, headers=heads, data=paramsT)
-                        else:
-                            returnResponse = requests.post(url=interfaceUrl, headers=heads, data=paramsT)
-                        data = returnResponse.json()
-                        jieXiData(tableName, data)
-                        isFirst = isFirst + 1
-                        if hasNextPage == 0:
-                            isContinue = False
-                            break;
-                        else:
-                            params['lastId'] = lastId
-                            isContinue = True
+                    # global isFirst  # 只有第一次才执行删除
+                    # isFirst = 1
+                    # while isContinue:
+                    #     params['fieldIds'] = dataList
+                    #     paramsT = json.dumps(params)
+                    #     if requeststyle == 'get':
+                    #         returnResponse = requests.get(url=interfaceUrl, headers=heads, data=paramsT)
+                    #     else:
+                    #         returnResponse = requests.post(url=interfaceUrl, headers=heads, data=paramsT)
+                    #     data = returnResponse.json()
+                    #     jieXiData(tableName, data)
+                    #     isFirst = isFirst + 1
+                    #     if hasNextPage == 0:
+                    #         isContinue = False
+                    #         break;
+                    #     else:
+                    #         params['lastId'] = lastId
+                    #         isContinue = True
                     #endregion
             elif dicTemp[dicT]['IsXunHuan']=='否':
                 paramsP = json.dumps(params)
@@ -403,12 +404,4 @@ if __name__ == '__main__':
                     returnResponse = requests.post(url=interfaceUrl, headers=heads, data=paramsP)
                 data = returnResponse.json()
                 jieXiData(tableName, data)
-
-    # 获取级联字段-数据："fieldIds": [81654764]  参数：{"fieldIds":[81649962]}
-    # 客户--客户行业分类：81655955
-    # 客户--省市县：81654764
-    # 客户--单位性质：81656622
-    # 客户--产品：81619239#客户联系人--部门：81656624
-    # 客户联系人--职务：81656625
-    # 客户联系人--联系人层级：81649962
 # endregion
