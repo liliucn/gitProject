@@ -62,6 +62,15 @@ def executeMany(insertSql, data):
 
 # endregion 数据库相关操作
 
+#region 获取数据
+def getJilianData():
+    sqlSel='select distinct fieldID from ec_dim_customerAutoInfo ' \
+           ' union all' \
+           ' select distinct id from ec_dim_customerContactAutoInfo;'
+    dataT=selectSql(sqlSel)
+    return list(dataT[0])
+#endregion
+
 # region 动态建表，动态入库的语句
 # 执行写入数据的操作
 def writeDBChildTable(tableName, fieldList, data, fieldLength):
@@ -76,6 +85,11 @@ def writeDBChildTable(tableName, fieldList, data, fieldLength):
         if tableName=='ec_dim_cusLabelBaseInfosGroup':#先删除主表，再删除子表
             delSql="delete from "+ tableName+" ; delete from ec_dim_cusLabelBaseInfosLabel; ";
             executeSql(delSql)
+        if tableName=='ec_dim_enum' and isFirst==1:
+            delSql = "delete from " + tableName;
+            executeSql(delSql)
+        if tableName=='ec_dim_enum' and isFirst!=1:
+            print('只有第一次执行删除');
         else:#没主子表时，只删除当前表表
             delSql="delete from "+ tableName;
             executeSql(delSql)
@@ -105,6 +119,11 @@ def jieXiData(tablename, dataTemp):
             dicListData = dicContent['data']
         elif 'ec_dim_enum' in tablename: #获取级联的字段
             dicListData=dicContent['data']['fieldParams']
+            global hasNextPage
+            global lastId
+            hasNextPage=dicContent['data']['nextPageDTO']['hasNextPage']
+            lastId=dicContent['data']['nextPageDTO']['nextLastId']
+            print(hasNextPage,lastId)
         elif 'depts' in tablename: #获取组织机构的部门
             dicListData = dicContent['data']['depts']
         elif 'users' in tablename:#获取组织机构的人员
@@ -169,7 +188,7 @@ def createAndInsertTable(dicListData, tablename):
             # region 循环所有的键
             # for j in rowT: #循环所有的键
             for j in keyLengthMax:  # 循环所有的键
-                #region 1、企业的自定义字段信息 接口
+                #region 1、企业的自定义字段信息 接口 2个表
                 if 'EC_dim_customerAutoInfo' in tablename: #企业的自定义字段信息-主表信息
                     tempValue = str(rowT[j]) if j in rowT else ''  # 判断当前的key，在不是当前的list里面，如果不在，则赋空值
                     if j!='fieldParam':
@@ -184,7 +203,7 @@ def createAndInsertTable(dicListData, tablename):
                             childTempList.append(tuple(tempC))
                 #endregion
 
-                #region 2、企业联系人的自定义字段信息 接口
+                #region 2、企业联系人的自定义字段信息 接口 2个表
                 if 'EC_dim_customerContactAutoInfo' in tablename: #企业联系人的自定义字段信息-主表信息
                     tempValue = str(rowT[j]) if j in rowT else ''  # 判断当前的key，在不是当前的list里面，如果不在，则赋空值
                     if j!='params':
@@ -199,19 +218,19 @@ def createAndInsertTable(dicListData, tablename):
                             childTempList.append(tuple(tempC))
                 #endregion
 
-                #region 3、级联 接口
+                #region 3、级联 接口 1个表
                 if 'ec_dim_enum' in tablename:
                     tempValue = str(rowT[j]) if j in rowT else ''  # 判断当前的key，在不是当前的list里面，如果不在，则赋空值
                     temp.append(str(tempValue))
                 #endregion
 
-                #region 4、组织架构-部门|人员
+                #region 4、组织架构-部门|人员 2个表、一个组织、一个人员
                 if 'ec_dim_org' in tablename:
                     tempValue = str(rowT[j]) if j in rowT else ''  # 判断当前的key，在不是当前的list里面，如果不在，则赋空值
                     temp.append(str(tempValue))
                 #endregion
 
-                #region 5、客户标签管理 - 分组
+                #region 5、客户标签管理 - 分组 2个表
                 if 'ec_dim_cusLabelBaseInfosGroup' in tablename:  # 客户标签管理-分组
                     tempValue = str(rowT[j]) if j in rowT else ''  # 判断当前的key，在不是当前的list里面，如果不在，则赋空值
                     if j != 'list':
@@ -226,7 +245,7 @@ def createAndInsertTable(dicListData, tablename):
                             childTempList.append(tuple(tempC))
                 #endregion
 
-                #region 6、获取客户进展信息
+                #region 6、获取客户进展信息 1个表
                 if 'ec_dim_cusStageBaseInfos' in tablename:
                     tempValue = str(rowT[j]) if j in rowT else ''  # 判断当前的key，在不是当前的list里面，如果不在，则赋空值
                     temp.append(str(tempValue))
@@ -285,12 +304,10 @@ if __name__ == '__main__':
                             'interfaceUrl': 'https://open.workec.com/v2/label/getLabelInfo', 'params': '','IsXunHuan':'否'}
             ,'客户进展列表': {'tableName': 'ec_dim_cusStageBaseInfos', 'requestStyle': 'get',
                      'interfaceUrl': 'https://open.workec.com/v2/config/getStages', 'params': '','IsXunHuan':'否'}
-            # , '客户标签管理-标签': {'tableName': 'ec_dim_cusLabelBaseInfosLabel', 'requestStyle': 'get',
-            #                 'interfaceUrl': 'https://open.workec.com/v2/label/getLabelInfo', 'params': '','IsXunHuan':'否'}
-            # '客户枚举相关字段': {'tableName': 'ec_dim_enum', 'requestStyle': 'post',
-            #                 'interfaceUrl': 'https://open.workec.com/v2/customer/getCasCadeFieldMapping', 'params': {
-            #                             "fieldIds": [81655955, 81654764, 81656622, 81619239, 81656624, 81656625, 81649962],"lastId":2283296},'IsXunHuan':'是'}
-            # , '客户列表': {'tableName': 'ec_dim_customer', 'requestStyle': 'post',
+            ,'客户枚举相关字段': {'tableName': 'ec_dim_enum', 'requestStyle': 'post',
+                            'interfaceUrl': 'https://open.workec.com/v2/customer/getCasCadeFieldMapping', 'params': {
+                                       },'IsXunHuan':'是'} # "fieldIds": [81655955, 81654764, 81656622, 81619239, 81656624, 81656625, 81649962] #完
+            # ,'客户列表': {'tableName': 'ec_dim_customer', 'requestStyle': 'post',
             #            'interfaceUrl': 'https://open.workec.com/v2/customer/queryList',
             #            'params': {"pageNo": "1", "pageSize": "200"}}
             # , '客户联系人信息': {'tableName': 'ec_dim_customerContact', 'requestStyle': 'post',
@@ -302,7 +319,6 @@ if __name__ == '__main__':
             # , '客户资料-文件目录查询': {'tableName': 'ec_dim_fileFolderList', 'requestStyle': 'get',
             #                   'interfaceUrl': 'https://open.workec.com/v2/customer/folder/list',
             #                   'params': {"crmIds": "5624387252,5624487824"}}
-
             # , '客户标签列表': {'tableName': 'ec_dim_cusLabelList', 'requestStyle': 'get',
             #              'interfaceUrl': 'https://open.workec.com/v2/customer/queryLabel',
             #              'params': {"crmIds": "5624387252,5624487824"}}
@@ -333,27 +349,58 @@ if __name__ == '__main__':
             tableName = dicTemp[dicT]['tableName']
             interfaceUrl = dicTemp[dicT]['interfaceUrl']
             params = dicTemp[dicT]['params']
-            # print(tableName, interfaceUrl, params)
-            params = json.dumps(params)
             requeststyle = dicTemp[dicT]['requestStyle']
 
             if dicTemp[dicT]['IsXunHuan']=='是':
                 if 'ec_dim_enum' in tableName:
+                    #region 级联字段
+                    dataList=getJilianData() #得到所有的级联字段，取企业自定义和联系人自定义字段 的字段ID
+                    global isFirst #只有第一次才执行删除
+                    isFirst=1
                     while isContinue:
+                        params['fieldIds'] = dataList
+                        paramsT = json.dumps(params)
                         if requeststyle == 'get':
-                            returnResponse = requests.get(url=interfaceUrl, headers=heads, data=params)
+                            returnResponse = requests.get(url=interfaceUrl, headers=heads, data=paramsT)
                         else:
-                            returnResponse = requests.post(url=interfaceUrl, headers=heads, data=params)
+                            returnResponse = requests.post(url=interfaceUrl, headers=heads, data=paramsT)
                         data = returnResponse.json()
                         jieXiData(tableName, data)
-                        # eval(params)['lastId']=2285885
-                        # print(eval(params)['lastId'])
-                        isContinue = False
+                        isFirst = isFirst+1
+                        if hasNextPage==0:
+                            isContinue = False
+                            break;
+                        else:
+                            params['lastId']=lastId
+                            isContinue = True
+                    #endregion 级联字段
+                elif 'ec_dim_customer' in tableName:
+                    #region 客户信息
+                    global isFirst  # 只有第一次才执行删除
+                    isFirst = 1
+                    while isContinue:
+                        params['fieldIds'] = dataList
+                        paramsT = json.dumps(params)
+                        if requeststyle == 'get':
+                            returnResponse = requests.get(url=interfaceUrl, headers=heads, data=paramsT)
+                        else:
+                            returnResponse = requests.post(url=interfaceUrl, headers=heads, data=paramsT)
+                        data = returnResponse.json()
+                        jieXiData(tableName, data)
+                        isFirst = isFirst + 1
+                        if hasNextPage == 0:
+                            isContinue = False
+                            break;
+                        else:
+                            params['lastId'] = lastId
+                            isContinue = True
+                    #endregion
             elif dicTemp[dicT]['IsXunHuan']=='否':
+                paramsP = json.dumps(params)
                 if requeststyle == 'get':
-                    returnResponse = requests.get(url=interfaceUrl, headers=heads, data=params)
+                    returnResponse = requests.get(url=interfaceUrl, headers=heads, data=paramsP)
                 else:
-                    returnResponse = requests.post(url=interfaceUrl, headers=heads, data=params)
+                    returnResponse = requests.post(url=interfaceUrl, headers=heads, data=paramsP)
                 data = returnResponse.json()
                 jieXiData(tableName, data)
 
