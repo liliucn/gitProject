@@ -68,7 +68,7 @@ def birthCreateSql(tableName_T,sqlTemp,tablenameT):
 def main():
 
     dicTemp={
-        '客户列表':{'tableName':'ec_dim_customer','fieldStr':'autoID,followUserId,groupId,name,call,gender,birthday,isLunarBirthday,title,qq,mobile,phone,fax,email,company,companyUrl,companyAddress,memo,vocation,channel,prefecture,crmId,modifyTime,contactTime,createTime,lastFollowUserId,step,createUserId,wechat,wechats,emails,mobiles,storageTime,publicPondId,apiAdd,crmType,shareUserId,lastContactTime,stars,khhyflyj,khhyflej,sheng,shi,qx,dwxz,cp,remark1,remark2,remark3,remark4,remark5,remark6'}
+        '客户列表':{'tableName':'ec_dim_customer','fieldStr':'autoID,followUserId,groupId,name,call,gender,birthday,isLunarBirthday,title,qq,mobile,phone,fax,email,company,companyUrl,companyAddress,memo,vocation,channel,prefecture,crmId,modifyTime,contactTime,createTime,lastFollowUserId,step,createUserId,wechat,wechats,emails,mobiles,storageTime,publicPondId,apiAdd,crmType,shareUserId,lastContactTime,stars,khhyflyj,khhyflej,sheng,shi,qx,dwxz,cp,lastContactType,remark1,remark2,remark3,remark4,remark5,remark6'}
          ,'枚举表-级联字段':{'tableName':'ec_dim_enum','fieldStr':'autoID,fieldId,paramId,parentParamId,paramName,sort,remark1,remark2,remark3,remark4,remark5,remark6'}
          ,'客户联系人信息':{'tableName':'ec_dim_customerContact','fieldStr':'autoID,id,crmId,corpid,createUserId,name,callName,title,mobile,mobileCode,phone,phoneCode,phoneExtension,qq,email,wechat,birthday,lunarBirthday,lunarLeap,memo,gender,createTime,updateTime,bumen,zhiwu,lxrcj,remark1,remark2,remark3,remark4,remark5,remark6'}
          ,'组织架构-部门':{'tableName':'ec_dim_orgdepts','fieldStr':'autoID,deptId,deptName,parentDeptId,remark1,remark2,remark3,remark4,remark5,remark6'}
