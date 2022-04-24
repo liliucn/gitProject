@@ -86,13 +86,13 @@ def main():
                         'fieldStr': 'autoID,classId,className,sort,parentID,remark1,remark2,remark3,remark4,remark5,remark6'}
         , '枚举表-级联字段': {'tableName': 'ec_dim_enum',
                        'fieldStr': 'autoID,fieldId,paramId,parentParamId,paramName,sort,remark1,remark2,remark3,remark4,remark5,remark6'}
+        ,'客户进展列表':{'tableName':'ec_dim_cusStageBaseInfos','fieldStr':'autoID,name,stage,status,remark1,remark2,remark3,remark4,remark5,remark6'}
 
         # , '客户列表':{'tableName':'ec_dim_customer','fieldStr':'autoID,followUserId,groupId,name,call,gender,birthday,isLunarBirthday,title,qq,mobile,phone,fax,email,company,companyUrl,companyAddress,memo,vocation,channel,prefecture,crmId,modifyTime,contactTime,createTime,lastFollowUserId,step,createUserId,wechat,wechats,emails,mobiles,storageTime,publicPondId,apiAdd,crmType,shareUserId,lastContactTime,stars,khhyflyj,khhyflej,sheng,shi,qx,dwxz,cp,lastContactType,remark1,remark2,remark3,remark4,remark5,remark6'}
         #  ,'客户联系人信息':{'tableName':'ec_dim_customerContact','fieldStr':'autoID,id,crmId,corpid,createUserId,name,callName,title,mobile,mobileCode,phone,phoneCode,phoneExtension,qq,email,wechat,birthday,lunarBirthday,lunarLeap,memo,gender,createTime,updateTime,bumen,zhiwu,lxrcj,remark1,remark2,remark3,remark4,remark5,remark6'}
         #  ,'EC-客户资料-文件列表查询':{'tableName':'ec_dim_fileList','fieldStr':'autoID,crmId,folderId,createUserId,createUserName,path,id,name,size,updateTime,remark1,remark2,remark3,remark4,remark5,remark6'}
         #  ,'EC-客户资料-文件目录查询':{'tableName':'ec_dim_fileFolderList','fieldStr':'autoID,CrmFolderItem,crmId,createUserId,createUserName,id,name,size,updateTime,remark1,remark2,remark3,remark4,remark5,remark6'}
         #  ,'客户标签列表':{'tableName':'ec_dim_cusLabelList','fieldStr':'autoID,crmId,labelId,remark1,remark2,remark3,remark4,remark5,remark6'}
-        #  ,'客户进展列表':{'tableName':'ec_dim_cusStageBaseInfos','fieldStr':'autoID,name,stage,status,remark1,remark2,remark3,remark4,remark5,remark6'}
         #  ,'客户头像':{'tableName':'ec_dim_cusImagesList','fieldStr':'autoID,crmId,face,name,remark1,remark2,remark3,remark4,remark5,remark6'}
         #  ,'客户轨迹':{'tableName':'ec_dim_cusTrajectoryBaseInfos','fieldStr':'autoID,levelOneID,levelOneName,TrajectoryID,TrajectoryName,remark1,remark2,remark3,remark4,remark5,remark6'}
         #  ,'查询客户轨迹':{'tableName':'ec_dim_cusTrajectory','fieldStr':'autoID,content,createTime,crmId,receiveUserIds,trajectoryId,trajectoryType,userId,remark1,remark2,remark3,remark4,remark5,remark6'}
