@@ -98,7 +98,7 @@ def main():
         #  ,'查询客户轨迹':{'tableName':'ec_dim_cusTrajectory','fieldStr':'autoID,content,createTime,crmId,receiveUserIds,trajectoryId,trajectoryType,userId,remark1,remark2,remark3,remark4,remark5,remark6'}
         #  ,'删除客户':{'tableName':'ec_dim_customer_del','fieldStr':'autoID,crmId,delTime,id,remark1,remark2,remark3,remark4,remark5,remark6'}
         #  ,'查询任务':{'tableName':'ec_dim_taskList','fieldStr':'autoID,taskId,ruleId,title,noticeTime,endTime,createName,createUserId,exeName,exeId,exeNum,taskNum,detail,ruleType,taskType,remark1,remark2,remark3,remark4,remark5,remark6'}
-         # ,'规则|任务类型':{'tableName':'ec_dim_kindType','fieldStr':'autoID,typeID,typeName,kindType,remark1,remark2,remark3,remark4,remark5,remark6'}
+        # ,'规则|任务类型':{'tableName':'ec_dim_kindType','fieldStr':'autoID,typeID,typeName,kindType,remark1,remark2,remark3,remark4,remark5,remark6'}
           }
     #执行createSql方法
     for dicT in dicTemp:
