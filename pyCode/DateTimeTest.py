@@ -4,15 +4,14 @@ import pandas as pd
 import pytz
 from datetime import *
 from dateutil import *
+from datetime import date
 import random
 from dateutil.rrule import rrule, WEEKLY, MO
-from datetime import date
 from dateutil.relativedelta import *
 from dateutil.relativedelta import relativedelta
 from datetime import datetime, timedelta
 import calendar
 import pendulum
-import datetime
 import time
 
 ### 1使用 time 模块展示当前日期和时间
@@ -65,7 +64,6 @@ d1 = "Jan 7 2015  1:15PM"
 d2 = "2015 Jan 7  1:33PM"
 
 ### If you know date format
-from datetime import datetime
 now = datetime.now()
 date1=now.strftime('%a, %b %d %H:%M')
 # date1 = now.strptime(d1, '%b %d %Y %I:%M%p')
@@ -82,25 +80,25 @@ milliseconds = int(round(time.time() * 1000))
 print(milliseconds)
 
 ### 6从给定的日期当中获取星期几
-dayofweek = datetime.date(2010, 6, 16).strftime("%A")
+dayofweek = date(2018,11,1).strftime("%A")
 print(dayofweek)
 ### weekday Monday is 0 and Sunday is 6
-print("weekday():", datetime.date(2010, 6, 16).weekday())
+print("weekday():", date(2010, 6, 16).weekday())
 
 ### isoweekday() Monday is 1 and Sunday is 7
-print("isoweekday()", datetime.date(2010, 6, 16).isoweekday())
+print("isoweekday()", date(2010, 6, 16).isoweekday())
 
-dayofweek = datetime.datetime.today().strftime("%A")
+dayofweek = datetime.today().strftime("%A")
 print(dayofweek)
-print("weekday():", datetime.datetime.today().weekday())
-print("isoweekday()", datetime.datetime.today().isoweekday())
+print("weekday():", datetime.today().weekday())
+print("isoweekday()", datetime.today().isoweekday())
 
 ### 7计算两个日期时间对象之间的时差
 datetimeFormat = '%Y-%m-%d %H:%M:%S.%f'
 date1 = '2016-04-16 10:01:28.585'
 date2 = '2016-03-10 09:56:28.067'
-diff = datetime.datetime.strptime(date1, datetimeFormat) \
-       - datetime.datetime.strptime(date2, datetimeFormat)
+diff = datetime.strptime(date1, datetimeFormat) \
+       - datetime.strptime(date2, datetimeFormat)
 
 print("Difference:", diff)
 print("Days:", diff.days)
@@ -108,6 +106,7 @@ print("Microseconds:", diff.microseconds)
 print("Seconds:", diff.seconds)
 
 ### 8将 5 分钟添加到 Unix 时间戳
+import datetime
 future = datetime.datetime.utcnow() + datetime.timedelta(minutes=5)
 print(calendar.timegm(future.timetuple()))
 
@@ -145,31 +144,30 @@ def calculate_age(born):
         return today.year - born.year - 1
     else:
         return today.year - born.year
-
-
+from datetime import date
 print(calculate_age(date(2001, 3, 1)))
 
 ### 13获得本月的第一个星期二
 c = calendar.Calendar(firstweekday=calendar.SUNDAY)
-monthcal = c.monthdatescalendar(datetime.today().year, datetime.today().month)
+monthcal = c.monthdatescalendar(date.today().year, date.today().month)
 
 try:
     tues = [day for week in monthcal for day in week if
-            day.weekday() == calendar.TUESDAY and day.month == datetime.today().month][0]
+            day.weekday() == calendar.TUESDAY and day.month == date.today().month][0]
     print(tues)
 except IndexError:
     print('No date found')
 
 ### 14将整数转换为日期对象
 i = 1545730073
-timestamp = datetime.fromtimestamp(i)
+timestamp = datetime.datetime.fromtimestamp(i)
 
 print(timestamp)
 print(type(timestamp))
 
 ### 15当前日期减去 N 天的天数
 
-d = datetime.today() - timedelta(days=5)
+d = date.today() - timedelta(days=5)
 print(d)
 
 ### 16比较两个日期
@@ -196,15 +194,13 @@ dt = pendulum.parse('2021-05-21')
 print(dt.day_of_week)
 
 ### 19从当前日期获取 7 天前的日期
-now = datetime.now()
+now = datetime.datetime.now()
 
 for x in range(7):
     d = now - timedelta(days=x)
     print(d.strftime("%Y-%m-%d"))
 
 ### 20将两个日期时间对象之间的差值转换为秒
-import datetime
-
 time1 = datetime.datetime.strptime('19 01 2021', '%d %m %Y')
 time2 = datetime.datetime.strptime('25 01 2021', '%d %m %Y')
 
@@ -230,7 +226,7 @@ except IndexError:
 ### 22从 Python 中的周数获取日期
 week = 25
 year = 2021
-date = datetime.date(year, 1, 1) + relativedelta(weeks=+week)
+date = date(year, 1, 1) + relativedelta(weeks=+week)
 print(date)
 
 ### 23获取特定日期的工作日
@@ -253,10 +249,9 @@ end = dt.end_of('week')
 print(end.to_datetime_string())
 
 ### 26两个日期之间的差异（以秒为单位）
-
 fmt = '%Y-%m-%d %H:%M:%S'
-d1 = datetime.strptime('2020-01-01 17:31:22', fmt)
-d2 = datetime.strptime('2020-01-03 17:31:22', fmt)
+d1 = datetime.datetime.strptime('2020-01-01 17:31:22', fmt)
+d2 = datetime.datetime.strptime('2020-01-03 17:31:22', fmt)
 
 days_diff = d2 - d1
 print(days_diff.days * 24 * 60 * 60)
@@ -305,15 +300,14 @@ next_sunday = next_weekday(d, 6)
 print(next_sunday)
 
 ### 33将（Unix）时间戳秒转换为日期和时间字符串
-dateStr = datetime.fromtimestamp(1415419007).strftime("%A, %B %d, %Y %I:%M:%S")
+dateStr = datetime.datetime.fromtimestamp(1415419007).strftime("%A, %B %d, %Y %I:%M:%S")
 print(type(dateStr))
 print(dateStr)
 
 ### 34以月为单位的两个日期之间的差异
-date1 = datetime.strptime('2014-01-12 12:00:00', '%Y-%m-%d %H:%M:%S')
-date2 = datetime.strptime('2021-07-15 12:00:00', '%Y-%m-%d %H:%M:%S')
-
-r = relativedelta.relativedelta(date2, date1)
+date1 = datetime.datetime.strptime('2014-01-12 12:00:00', '%Y-%m-%d %H:%M:%S')
+date2 = datetime.datetime.strptime('2021-07-15 12:00:00', '%Y-%m-%d %H:%M:%S')
+r = relativedelta(date2, date1)
 print(r.months + (12 * r.years))
 
 ### 35将本地时间字符串转换为 UTC
@@ -323,7 +317,7 @@ local_zone = tz.gettz('America/Chicago')
 utc_zone = tz.tzutc()
 local_zone = tz.tzlocal()
 
-local_time = datetime.strptime("2020-10-25 15:12:00", '%Y-%m-%d %H:%M:%S')
+local_time = datetime.datetime.strptime("2020-10-25 15:12:00", '%Y-%m-%d %H:%M:%S')
 print(local_time)
 local_time = local_time.replace(tzinfo=local_zone)
 print(local_time)
@@ -335,7 +329,7 @@ utc_string = utc_time.strftime('%Y-%m-%d %H:%M:%S')
 print(utc_string)
 
 ### 36获取当月的最后一个星期四
-month = calendar.monthcalendar(datetime.today().year, datetime.today().month)
+month = calendar.monthcalendar(datetime.datetime.today().year, datetime.datetime.today().month)
 thrusday = max(month[-1][calendar.THURSDAY], month[-2][calendar.THURSDAY])
 print(thrusday)
 
@@ -354,7 +348,7 @@ dt = datetime.datetime(2021, 4, 25, 23, 24, 55, 173504)
 print(calendar.day_name[dt.weekday()])
 
 ### 39用 AM PM 打印当前时间
-print(datetime.today().strftime("%I:%M %p"))
+print(datetime.datetime.today().strftime("%I:%M %p"))
 
 ### 40获得一个月的最后一天
 print(calendar.monthrange(2002, 1)[1])
@@ -372,7 +366,7 @@ print(calendar.day_name[5])
 print(calendar.day_name[6])
 
 ### 42将 N 小时数添加到当前日期时间
-d = datetime.today() + timedelta(hours=18)
+d = datetime.datetime.today() + timedelta(hours=18)
 print(d)
 
 ### 43从当前日期获取年、月、日、小时、分钟
@@ -422,14 +416,14 @@ except IndexError:
     print('No date found')
 
 ### 49将日期时间对象转换为日期对象
-datetime_obj = datetime(2020, 12, 15, 10, 15, 45, 321474)
+datetime_obj = datetime.datetime(2020, 12, 15, 10, 15, 45, 321474)
 print(datetime_obj)
 
 date_obj = datetime_obj.date()
 print(date_obj)
 
 ### 50获取没有微秒的当前日期时间
-print(datetime.now().isoformat(' ', 'seconds'))
+print(datetime.datetime.now().isoformat(' ', 'seconds'))
 
 ### 51将 N 秒数添加到特定日期时间
 a = datetime.datetime(2020, 12, 31, 23, 59, 45)
@@ -461,8 +455,8 @@ end = dt.end_of('month')
 print(end.to_datetime_string())
 
 ### 54以周为单位的两个日期之间的差异
-date1 = date(2020, 12, 23)
-date2 = date(2021, 5, 11)
+date1 = datetime.date(2020, 12, 23)
+date2 = datetime.date(2021, 5, 11)
 
 days = abs(date1 - date2).days
 print(days // 7)
@@ -474,7 +468,7 @@ print(datetime.datetime.strptime(stime, "%d/%m/%Y").timestamp())
 
 ### 56获取最后一个周日和周六的日期
 def prior_week_end():
-    return datetime.now() - timedelta(days=((datetime.now().isoweekday() + 1) % 7))
+    return datetime.datetime.now() - timedelta(days=((datetime.datetime.now().isoweekday() + 1) % 7))
 
 
 def prior_week_start():
@@ -495,7 +489,7 @@ print(isinstance(y, datetime.date))
 print(datetime.date(2020, 5, 15).isocalendar()[1])
 
 ### 59获取 UTC 时间
-dt = datetime.utcnow()
+dt = datetime.datetime.utcnow()
 
 ### 60获取本周的开始和结束日期
 today = pendulum.now()
@@ -509,8 +503,8 @@ print(end.to_datetime_string())
 ### 61两个日期之间的差异（以分钟为单位）
 
 fmt = '%Y-%m-%d %H:%M:%S'
-d1 = datetime.strptime('2010-01-01 17:31:22', fmt)
-d2 = datetime.strptime('2010-01-03 17:31:22', fmt)
+d1 = datetime.datetime.strptime('2010-01-01 17:31:22', fmt)
+d2 = datetime.datetime.strptime('2010-01-03 17:31:22', fmt)
 
 days_diff = d2 - d1
 print(days_diff.days * 24 * 60)
@@ -553,15 +547,15 @@ print(next_monday)
 
 ### 67两个日期之间的差异（以天为单位）
 
-d1 = date(2019, 8, 18)
-d2 = date(2021, 12, 10)
+d1 = datetime.date(2019, 8, 18)
+d2 = datetime.date(2021, 12, 10)
 
 days_diff = d2 - d1
 print(days_diff.days)
 
 ### 68向当前日期添加六个月
 
-date = datetime.now()
+date = datetime.datetime.now()
 print(date)
 
 date = date + relativedelta(months=+6)
@@ -628,7 +622,7 @@ print("Number of days in month:", month_range[1])
 
 ### 73打印特定年份的所有星期一
 year = 2018
-date_object = date(year, 1, 1)
+date_object = datetime.date(year, 1, 1)
 date_object += timedelta(days=1 - date_object.isoweekday())
 
 while date_object.year == year:
@@ -662,7 +656,7 @@ for month_val in range(1, 13):
 
 ### 76从给定日期获取一周的开始和结束日期
 date_str = '2018-01-14'
-date_obj = datetime.strptime(date_str, '%Y-%m-%d')
+date_obj = datetime.datetime.strptime(date_str, '%Y-%m-%d')
 
 start_of_week = date_obj - timedelta(days=date_obj.weekday())  ### Monday
 end_of_week = start_of_week + timedelta(days=6)  ### Sunday
@@ -671,17 +665,17 @@ print(end_of_week)
 
 ### 77根据当前日期查找上一个和下一个星期一的日期
 today = datetime.date.today()
-last_monday = today - datetime.timedelta(days=today.weekday())
-coming_monday = today + datetime.timedelta(days=-today.weekday(), weeks=1)
+last_monday = today - timedelta(days=today.weekday())
+coming_monday = today + timedelta(days=-today.weekday(), weeks=1)
 print("Today:", today)
 print("Last Monday:", last_monday)
 print("Coming Monday:", coming_monday)
 
 ### 78获取当前季度的第一个日期和最后一个日期
-current_date = datetime.now()
+current_date = datetime.datetime.now()
 current_quarter = round((current_date.month - 1) / 3 + 1)
-first_date = datetime(current_date.year, 3 * current_quarter - 2, 1)
-last_date = datetime(current_date.year, 3 * current_quarter + 1, 1) \
+first_date = datetime.datetime(current_date.year, 3 * current_quarter - 2, 1)
+last_date = datetime.datetime(current_date.year, 3 * current_quarter + 1, 1) \
             + timedelta(days=-1)
 
 print("First Day of Quarter:", first_date)
