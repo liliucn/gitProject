@@ -345,8 +345,8 @@ def DataTreat():
 
 #主方法
 def main():
-    DecisionTreeClassifier1()  #1、决策树-分类树 红酒数据集,有树的可视化,以及 模型估化可视化 【这个乱码】
-    # DecisionTreeClassifier2()  #2、决策树-分类树  泰坦尼克号幸存者的预测
+    # DecisionTreeClassifier1()  #1、决策树-分类树 红酒数据集,有树的可视化,以及 模型估化可视化 【这个乱码】
+    DecisionTreeClassifier2()  #2、决策树-分类树  泰坦尼克号幸存者的预测
     # DecisionTreeRegressor1()   #3、 决策树-回归树
     # RandomForestClassifier1()  #4、随机森林-分类算法  比较决策树和随机森林的分类结果
     # RandomForestRegressor1()   #5、随机森林-回归算法
