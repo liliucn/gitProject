@@ -18,8 +18,6 @@ def from_mysql_get_all_info():
     data = cursor.fetchall()
     conn.close()
     return data
-
-
 def write_csv():
     data = from_mysql_get_all_info()
     filename = 'a3_tab_khywcx.csv'
