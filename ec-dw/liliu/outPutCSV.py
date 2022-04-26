@@ -3,6 +3,7 @@ import logging
 import pymysql
 import csv
 import codecs
+import os
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
@@ -22,11 +23,17 @@ def from_mysql_get_all_info():
 def write_csv():
     data = from_mysql_get_all_info()
     filename = 'a3_tab_khywcx.csv'
-    with open(filename,mode='w',encoding='utf-8') as f:
-        write = csv.writer(f,dialect='excel')
+    filePath='//192.168.2.100/files/data/'
+    if os.path.exists(filePath) == False:
+        os.makedirs(filePath)
+    with open(filePath+filename, mode='w', encoding='utf-8') as f:
+        write = csv.writer(f, dialect='excel')
         # f.write(codecs.BOM_UTF8)
-        header_list = ['id','khid','khmc','level','sheng','shi','quxian','ywzt','yjfl','ejfl','sjfl','cp','xm','hkje','yjje','cjrq','barq','yxry','yxbm','yxjgid','yxjg','owner','BDry','xmjl','xmbh','htje','jxzt','jdrq','skdid']
+        header_list = ['id', 'khid', 'khmc', 'level', 'sheng', 'shi', 'quxian', 'ywzt', 'yjfl', 'ejfl', 'sjfl',
+                       'cp', 'xm', 'hkje', 'yjje', 'cjrq', 'barq', 'yxry', 'yxbm', 'yxjgid', 'yxjg', 'owner',
+                       'BDry', 'xmjl', 'xmbh', 'htje', 'jxzt', 'jdrq', 'skdid']
         write.writerow(header_list)
         for item in data:
             write.writerow(item)
+
 write_csv()
